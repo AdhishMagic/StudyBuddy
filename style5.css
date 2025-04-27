@@ -1,0 +1,1111 @@
+.desktop {
+    background-color: #ffffff;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    width: 100%;
+  }
+  
+  .desktop .div {
+    background-color: #ffffff;
+    overflow: hidden;
+    width: 1440px;
+    height: 1024px;
+    position: relative;
+  }
+  
+  .desktop .text-wrapper {
+    position: absolute;
+    width: 323px;
+    top: 346px;
+    left: 182px;
+    font-family: "Inter-SemiBold", Helvetica;
+    font-weight: 600;
+    color: #000000;
+    font-size: 32px;
+    letter-spacing: 0;
+    line-height: 20px;
+  }
+  
+  .desktop .overlap {
+    position: absolute;
+    width: 1440px;
+    height: 601px;
+    top: 423px;
+    left: 0;
+  }
+  
+  .desktop .group {
+    position: absolute;
+    width: 100px;
+    height: 178px;
+    top: 23px;
+    left: 566px;
+  }
+  
+  .desktop .group-2 {
+    position: absolute;
+    width: 73px;
+    height: 44px;
+    top: 134px;
+    left: 0;
+  }
+  
+  .desktop .text-wrapper-2 {
+    position: absolute;
+    top: 0;
+    left: 0;
+    font-family: "Urbanist-SemiBold", Helvetica;
+    font-weight: 600;
+    color: #165c73;
+    font-size: 10px;
+    letter-spacing: 0;
+    line-height: normal;
+  }
+  
+  .desktop .group-3 {
+    top: 34px;
+    position: absolute;
+    width: 52px;
+    height: 10px;
+    left: 0;
+  }
+  
+  .desktop .group-4 {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    top: 0;
+    left: 31px;
+    background-image: url(./img/ic-round-star-rate-36.svg);
+    background-size: 100% 100%;
+  }
+  
+  .desktop .group-5 {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    top: 0;
+    left: 42px;
+    background-image: url(./img/ic-round-star-rate-27.svg);
+    background-size: 100% 100%;
+  }
+  
+  .desktop .group-6 {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    top: 0;
+    left: 21px;
+    background-image: url(./img/ic-round-star-rate-30.svg);
+    background-size: 100% 100%;
+  }
+  
+  .desktop .group-7 {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    top: 0;
+    left: 10px;
+    background-image: url(./img/ic-round-star-rate-13.svg);
+    background-size: 100% 100%;
+  }
+  
+  .desktop .group-8 {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    top: 0;
+    left: 0;
+    background-image: url(./img/ic-round-star-rate-5.svg);
+    background-size: 100% 100%;
+  }
+  
+  .desktop .text-wrapper-3 {
+    position: absolute;
+    top: 24px;
+    left: 0;
+    font-family: "Urbanist-SemiBold", Helvetica;
+    font-weight: 600;
+    color: #979797;
+    font-size: 8px;
+    letter-spacing: 0;
+    line-height: normal;
+  }
+  
+  .desktop .rectangle {
+    position: absolute;
+    width: 100px;
+    height: 133px;
+    top: 0;
+    left: 0;
+    object-fit: cover;
+  }
+  
+  .desktop .overlap-group {
+    position: absolute;
+    width: 1440px;
+    height: 594px;
+    top: 7px;
+    left: 0;
+  }
+  
+  .desktop .group-9 {
+    position: absolute;
+    width: 100px;
+    height: 178px;
+    top: 224px;
+    left: 568px;
+  }
+  
+  .desktop .group-10 {
+    position: absolute;
+    width: 56px;
+    height: 40px;
+    top: 138px;
+    left: 0;
+  }
+  
+  .desktop .text-wrapper-4 {
+    position: absolute;
+    top: 0;
+    left: 0;
+    font-family: "Urbanist-SemiBold", Helvetica;
+    font-weight: 600;
+    color: #165c73;
+    font-size: 10px;
+    letter-spacing: 0;
+    line-height: normal;
+    white-space: nowrap;
+  }
+  
+  .desktop .group-11 {
+    top: 30px;
+    position: absolute;
+    width: 52px;
+    height: 10px;
+    left: 0;
+  }
+  
+  .desktop .group-12 {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    top: 0;
+    left: 31px;
+    background-image: url(./img/ic-round-star-rate-3.svg);
+    background-size: 100% 100%;
+  }
+  
+  .desktop .group-13 {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    top: 0;
+    left: 42px;
+    background-image: url(./img/ic-round-star-rate-19.svg);
+    background-size: 100% 100%;
+  }
+  
+  .desktop .group-14 {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    top: 0;
+    left: 21px;
+    background-image: url(./img/ic-round-star-rate-10.svg);
+    background-size: 100% 100%;
+  }
+  
+  .desktop .group-15 {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    top: 0;
+    left: 10px;
+    background-image: url(./img/ic-round-star-rate.svg);
+    background-size: 100% 100%;
+  }
+  
+  .desktop .group-16 {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    top: 0;
+    left: 0;
+    background-image: url(./img/ic-round-star-rate-44.svg);
+    background-size: 100% 100%;
+  }
+  
+  .desktop .text-wrapper-5 {
+    position: absolute;
+    top: 20px;
+    left: 0;
+    font-family: "Urbanist-SemiBold", Helvetica;
+    font-weight: 600;
+    color: #979797;
+    font-size: 8px;
+    letter-spacing: 0;
+    line-height: normal;
+  }
+  
+  .desktop .group-17 {
+    position: absolute;
+    width: 100px;
+    height: 178px;
+    top: 208px;
+    left: 756px;
+  }
+  
+  .desktop .group-18 {
+    position: absolute;
+    width: 88px;
+    height: 43px;
+    top: 135px;
+    left: 0;
+  }
+  
+  .desktop .overlap-group-2 {
+    position: absolute;
+    width: 84px;
+    height: 33px;
+    top: 0;
+    left: 0;
+  }
+  
+  .desktop .text-wrapper-6 {
+    position: absolute;
+    top: 23px;
+    left: 0;
+    font-family: "Urbanist-SemiBold", Helvetica;
+    font-weight: 600;
+    color: #979797;
+    font-size: 8px;
+    letter-spacing: 0;
+    line-height: normal;
+  }
+  
+  .desktop .group-19 {
+    top: 33px;
+    position: absolute;
+    width: 52px;
+    height: 10px;
+    left: 0;
+  }
+  
+  .desktop .group-20 {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    top: 0;
+    left: 31px;
+    background-image: url(./img/ic-round-star-rate-37.svg);
+    background-size: 100% 100%;
+  }
+  
+  .desktop .group-21 {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    top: 0;
+    left: 42px;
+    background-image: url(./img/ic-round-star-rate-24.svg);
+    background-size: 100% 100%;
+  }
+  
+  .desktop .group-22 {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    top: 0;
+    left: 21px;
+    background-image: url(./img/ic-round-star-rate-17.svg);
+    background-size: 100% 100%;
+  }
+  
+  .desktop .group-23 {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    top: 0;
+    left: 10px;
+    background-image: url(./img/ic-round-star-rate-18.svg);
+    background-size: 100% 100%;
+  }
+  
+  .desktop .group-24 {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    top: 0;
+    left: 0;
+    background-image: url(./img/image.svg);
+    background-size: 100% 100%;
+  }
+  
+  .desktop .group-25 {
+    position: absolute;
+    width: 125px;
+    height: 85px;
+    top: 344px;
+    left: 1217px;
+  }
+  
+  .desktop .group-26 {
+    position: absolute;
+    width: 52px;
+    height: 10px;
+    top: 65px;
+    left: 67px;
+  }
+  
+  .desktop .group-27 {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    top: 0;
+    left: 31px;
+    background-image: url(./img/ic-round-star-rate-31.svg);
+    background-size: 100% 100%;
+  }
+  
+  .desktop .group-28 {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    top: 0;
+    left: 42px;
+    background-image: url(./img/ic-round-star-rate-40.svg);
+    background-size: 100% 100%;
+  }
+  
+  .desktop .group-29 {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    top: 0;
+    left: 21px;
+    background-image: url(./img/ic-round-star-rate-21.svg);
+    background-size: 100% 100%;
+  }
+  
+  .desktop .group-30 {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    top: 0;
+    left: 10px;
+    background-image: url(./img/ic-round-star-rate-23.svg);
+    background-size: 100% 100%;
+  }
+  
+  .desktop .group-31 {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    top: 0;
+    left: 0;
+    background-image: url(./img/ic-round-star-rate-15.svg);
+    background-size: 100% 100%;
+  }
+  
+  .desktop .text-wrapper-7 {
+    position: absolute;
+    top: 10px;
+    left: 67px;
+    font-family: "Urbanist-SemiBold", Helvetica;
+    font-weight: 600;
+    color: #165c73;
+    font-size: 10px;
+    letter-spacing: 0;
+    line-height: normal;
+    white-space: nowrap;
+  }
+  
+  .desktop .text-wrapper-8 {
+    position: absolute;
+    top: 24px;
+    left: 67px;
+    font-family: "Urbanist-SemiBold", Helvetica;
+    font-weight: 600;
+    color: #979797;
+    font-size: 10px;
+    letter-spacing: 0;
+    line-height: normal;
+    white-space: nowrap;
+  }
+  
+  .desktop .img {
+    position: absolute;
+    width: 60px;
+    height: 85px;
+    top: 0;
+    left: 0;
+    object-fit: cover;
+  }
+  
+  .desktop .vector {
+    position: absolute;
+    width: 1440px;
+    height: 338px;
+    top: 256px;
+    left: 0;
+  }
+  
+  .desktop .frame {
+    display: flex;
+    flex-direction: column;
+    width: 323px;
+    align-items: flex-start;
+    gap: 16px;
+    position: absolute;
+    top: 0;
+    left: 146px;
+  }
+  
+  .desktop .frame-2 {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+    position: relative;
+    flex: 0 0 auto;
+    margin-right: -16.00px;
+  }
+  
+  .desktop .frame-3 {
+    display: flex;
+    width: 339px;
+    align-items: flex-start;
+    gap: 16px;
+    position: relative;
+    flex: 0 0 auto;
+  }
+  
+  .desktop .frame-4 {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 16px;
+    position: relative;
+    flex: 1;
+    flex-grow: 1;
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0px 94px 26px transparent;
+  }
+  
+  .desktop .image {
+    position: relative;
+    width: 77px;
+    height: 116px;
+    object-fit: cover;
+  }
+  
+  .desktop .frame-5 {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+    position: relative;
+    align-self: stretch;
+    width: 100%;
+    flex: 0 0 auto;
+  }
+  
+  .desktop .p {
+    position: relative;
+    align-self: stretch;
+    height: 20px;
+    margin-top: -1.00px;
+    font-family: "Inter-SemiBold", Helvetica;
+    font-weight: 600;
+    color: #000000;
+    font-size: 13px;
+    letter-spacing: 0;
+    line-height: 20px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+  }
+  
+  .desktop .text-wrapper-9 {
+    position: relative;
+    align-self: stretch;
+    font-family: "Inter-Medium", Helvetica;
+    font-weight: 500;
+    color: #000000;
+    font-size: 12px;
+    letter-spacing: 0;
+    line-height: 20px;
+  }
+  
+  .desktop .frame-6 {
+    display: flex;
+    flex-direction: column;
+    width: 147px;
+    align-items: flex-start;
+    gap: 4px;
+    position: relative;
+    flex: 0 0 auto;
+    margin-right: -17.50px;
+  }
+  
+  .desktop .group-32 {
+    position: absolute;
+    width: 142px;
+    height: 85px;
+    top: 339px;
+    left: 969px;
+  }
+  
+  .desktop .group-33 {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    top: 0;
+    left: 31px;
+    background-image: url(./img/ic-round-star-rate-16.svg);
+    background-size: 100% 100%;
+  }
+  
+  .desktop .group-34 {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    top: 0;
+    left: 42px;
+    background-image: url(./img/ic-round-star-rate-14.svg);
+    background-size: 100% 100%;
+  }
+  
+  .desktop .group-35 {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    top: 0;
+    left: 21px;
+    background-image: url(./img/ic-round-star-rate-48.svg);
+    background-size: 100% 100%;
+  }
+  
+  .desktop .group-36 {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    top: 0;
+    left: 10px;
+    background-image: url(./img/ic-round-star-rate-26.svg);
+    background-size: 100% 100%;
+  }
+  
+  .desktop .group-37 {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    top: 0;
+    left: 0;
+    background-image: url(./img/ic-round-star-rate-8.svg);
+    background-size: 100% 100%;
+  }
+  
+  .desktop .group-38 {
+    position: absolute;
+    width: 100px;
+    height: 178px;
+    top: 15px;
+    left: 759px;
+  }
+  
+  .desktop .group-39 {
+    position: absolute;
+    width: 100px;
+    height: 42px;
+    top: 136px;
+    left: 0;
+  }
+  
+  .desktop .overlap-group-3 {
+    position: absolute;
+    width: 96px;
+    height: 32px;
+    top: 0;
+    left: 0;
+  }
+  
+  .desktop .text-wrapper-10 {
+    position: absolute;
+    top: 22px;
+    left: 0;
+    font-family: "Urbanist-SemiBold", Helvetica;
+    font-weight: 600;
+    color: #979797;
+    font-size: 8px;
+    text-align: center;
+    letter-spacing: 0;
+    line-height: normal;
+  }
+  
+  .desktop .group-40 {
+    top: 32px;
+    position: absolute;
+    width: 52px;
+    height: 10px;
+    left: 0;
+  }
+  
+  .desktop .group-41 {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    top: 0;
+    left: 31px;
+    background-image: url(./img/ic-round-star-rate-42.svg);
+    background-size: 100% 100%;
+  }
+  
+  .desktop .group-42 {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    top: 0;
+    left: 42px;
+    background-image: url(./img/ic-round-star-rate-32.svg);
+    background-size: 100% 100%;
+  }
+  
+  .desktop .group-43 {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    top: 0;
+    left: 21px;
+    background-image: url(./img/ic-round-star-rate-22.svg);
+    background-size: 100% 100%;
+  }
+  
+  .desktop .group-44 {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    top: 0;
+    left: 10px;
+    background-image: url(./img/ic-round-star-rate-39.svg);
+    background-size: 100% 100%;
+  }
+  
+  .desktop .group-45 {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    top: 0;
+    left: 0;
+    background-image: url(./img/ic-round-star-rate-9.svg);
+    background-size: 100% 100%;
+  }
+  
+  .desktop .group-46 {
+    position: absolute;
+    width: 150px;
+    height: 85px;
+    top: 173px;
+    left: 1213px;
+  }
+  
+  .desktop .group-47 {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    top: 0;
+    left: 31px;
+    background-image: url(./img/ic-round-star-rate-41.svg);
+    background-size: 100% 100%;
+  }
+  
+  .desktop .group-48 {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    top: 0;
+    left: 42px;
+    background-image: url(./img/ic-round-star-rate-43.svg);
+    background-size: 100% 100%;
+  }
+  
+  .desktop .group-49 {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    top: 0;
+    left: 21px;
+    background-image: url(./img/ic-round-star-rate-35.svg);
+    background-size: 100% 100%;
+  }
+  
+  .desktop .group-50 {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    top: 0;
+    left: 10px;
+    background-image: url(./img/ic-round-star-rate-28.svg);
+    background-size: 100% 100%;
+  }
+  
+  .desktop .group-51 {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    top: 0;
+    left: 0;
+    background-image: url(./img/ic-round-star-rate-11.svg);
+    background-size: 100% 100%;
+  }
+  
+  .desktop .group-52 {
+    position: absolute;
+    width: 144px;
+    height: 85px;
+    top: 0;
+    left: 1203px;
+  }
+  
+  .desktop .group-53 {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    top: 0;
+    left: 31px;
+    background-image: url(./img/ic-round-star-rate-45.svg);
+    background-size: 100% 100%;
+  }
+  
+  .desktop .group-54 {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    top: 0;
+    left: 42px;
+    background-image: url(./img/ic-round-star-rate-29.svg);
+    background-size: 100% 100%;
+  }
+  
+  .desktop .group-55 {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    top: 0;
+    left: 21px;
+    background-image: url(./img/ic-round-star-rate-2.svg);
+    background-size: 100% 100%;
+  }
+  
+  .desktop .group-56 {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    top: 0;
+    left: 10px;
+    background-image: url(./img/ic-round-star-rate-38.svg);
+    background-size: 100% 100%;
+  }
+  
+  .desktop .group-57 {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    top: 0;
+    left: 0;
+    background-image: url(./img/ic-round-star-rate-46.svg);
+    background-size: 100% 100%;
+  }
+  
+  .desktop .group-58 {
+    position: absolute;
+    width: 142px;
+    height: 85px;
+    top: 4px;
+    left: 960px;
+  }
+  
+  .desktop .group-59 {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    top: 0;
+    left: 31px;
+    background-image: url(./img/ic-round-star-rate-47.svg);
+    background-size: 100% 100%;
+  }
+  
+  .desktop .group-60 {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    top: 0;
+    left: 42px;
+    background-image: url(./img/ic-round-star-rate-34.svg);
+    background-size: 100% 100%;
+  }
+  
+  .desktop .group-61 {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    top: 0;
+    left: 21px;
+    background-image: url(./img/ic-round-star-rate-33.svg);
+    background-size: 100% 100%;
+  }
+  
+  .desktop .group-62 {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    top: 0;
+    left: 10px;
+    background-image: url(./img/ic-round-star-rate-12.svg);
+    background-size: 100% 100%;
+  }
+  
+  .desktop .group-63 {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    top: 0;
+    left: 0;
+    background-image: url(./img/ic-round-star-rate-49.svg);
+    background-size: 100% 100%;
+  }
+  
+  .desktop .group-64 {
+    position: absolute;
+    width: 131px;
+    height: 85px;
+    top: 173px;
+    left: 956px;
+  }
+  
+  .desktop .group-65 {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    top: 0;
+    left: 31px;
+    background-image: url(./img/ic-round-star-rate-20.svg);
+    background-size: 100% 100%;
+  }
+  
+  .desktop .group-66 {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    top: 0;
+    left: 42px;
+    background-image: url(./img/ic-round-star-rate-4.svg);
+    background-size: 100% 100%;
+  }
+  
+  .desktop .group-67 {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    top: 0;
+    left: 21px;
+    background-image: url(./img/ic-round-star-rate-6.svg);
+    background-size: 100% 100%;
+  }
+  
+  .desktop .group-68 {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    top: 0;
+    left: 10px;
+    background-image: url(./img/ic-round-star-rate-25.svg);
+    background-size: 100% 100%;
+  }
+  
+  .desktop .group-69 {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    top: 0;
+    left: 0;
+    background-image: url(./img/ic-round-star-rate-7.svg);
+    background-size: 100% 100%;
+  }
+  
+  .desktop .overlap-wrapper {
+    position: absolute;
+    width: 1512px;
+    height: 100px;
+    top: 31px;
+    left: 52px;
+  }
+  
+  .desktop .overlap-2 {
+    position: relative;
+    width: 1440px;
+    height: 100px;
+  }
+  
+  .desktop .align-justify {
+    position: absolute;
+    width: 24px;
+    height: 24px;
+    top: 45px;
+    left: 1256px;
+  }
+  
+  .desktop .group-70 {
+    position: absolute;
+    width: 1440px;
+    height: 100px;
+    top: 0;
+    left: 0;
+  }
+  
+  .desktop .frame-7 {
+    display: flex;
+    width: 385px;
+    align-items: center;
+    gap: 25px;
+    position: absolute;
+    top: 42px;
+    left: 867px;
+  }
+  
+  .desktop .text-wrapper-11 {
+    position: relative;
+    width: fit-content;
+    font-family: "Inter-Medium", Helvetica;
+    font-weight: 500;
+    color: #101828;
+    font-size: 16px;
+    letter-spacing: 0;
+    line-height: 24px;
+    white-space: nowrap;
+  }
+  
+  .desktop .text-wrapper-12 {
+    position: relative;
+    width: 81px;
+    height: 30px;
+    margin-top: -1.00px;
+    font-family: "Inter-Medium", Helvetica;
+    font-weight: 500;
+    color: #000000;
+    font-size: 16px;
+    letter-spacing: 0;
+    line-height: 24px;
+  }
+  
+  .desktop .ellipse {
+    position: absolute;
+    width: 90px;
+    height: 90px;
+    top: 5px;
+    left: 17px;
+    object-fit: cover;
+  }
+  
+  .desktop .frame-wrapper {
+    display: inline-flex;
+    align-items: center;
+    gap: 30px;
+    position: absolute;
+    top: 21px;
+    left: 120px;
+  }
+  
+  .desktop .sample-logo-wrapper {
+    display: inline-flex;
+    align-items: center;
+    gap: 20px;
+    position: relative;
+    flex: 0 0 auto;
+  }
+  
+  .desktop .sample-logo {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 5px 10px;
+    position: relative;
+    flex: 0 0 auto;
+  }
+  
+  .desktop .ed-circle {
+    position: relative;
+    width: fit-content;
+    margin-top: -1.00px;
+    font-family: "Inter-ExtraBold", Helvetica;
+    font-weight: 800;
+    color: transparent;
+    font-size: 40px;
+    letter-spacing: 0.80px;
+    line-height: normal;
+    white-space: nowrap;
+  }
+  
+  .desktop .span {
+    color: #101828;
+    letter-spacing: 0.32px;
+  }
+  
+  .desktop .text-wrapper-13 {
+    color: #7e56d8;
+    letter-spacing: 0.32px;
+  }
+  
+  .desktop .rectangle-2 {
+    position: absolute;
+    width: 91px;
+    height: 36px;
+    top: 37px;
+    left: 1136px;
+    background-color: #d9d9d9;
+    border-radius: 20px;
+    border: 1px solid;
+    border-color: #100b0b;
+    box-shadow: 0px 4px 4px 4px #00000040;
+    opacity: 0.1;
+  }
+  
+  .desktop .rectangle-3 {
+    position: absolute;
+    width: 348px;
+    height: 212px;
+    top: 152px;
+    left: 931px;
+    object-fit: cover;
+  }
+  
+  .desktop .find-out-the-best-wrapper {
+    position: absolute;
+    width: 350px;
+    height: 150px;
+    top: 152px;
+    left: 297px;
+    background-image: url(./img/rectangle-13.png);
+    background-size: cover;
+    background-position: 50% 50%;
+  }
+  
+  .desktop .find-out-the-best {
+    position: absolute;
+    top: 23px;
+    left: 34px;
+    font-family: "Urbanist-SemiBold", Helvetica;
+    font-weight: 600;
+    color: #ffffff;
+    font-size: 14px;
+    letter-spacing: 0;
+    line-height: normal;
+  }
