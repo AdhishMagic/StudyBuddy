@@ -1,8 +1,0 @@
-
-{
-  "name": "StudyBuddy: AI Study Planner",
-  "description": "An intelligent web application that leverages the Gemini API to generate personalized study schedules for students. Users can input their exam details, subjects, and daily study hours to receive a comprehensive, day-by-day plan designed to optimize their learning and preparation.",
-  "requestFramePermissions": [
-    "microphone"
-  ]
-}
