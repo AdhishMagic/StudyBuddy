@@ -1,6 +1,6 @@
 import { useState, useMemo } from "react";
 import Header from "@/components/Header";
-import { Plus, Trash2, Edit2 } from "lucide-react";
+import { Plus, Trash2, Edit2, ChevronLeft, ChevronRight } from "lucide-react";
 
 interface Task {
   id: string;
@@ -68,7 +68,7 @@ export default function Dashboard() {
   ]);
 
   const [newTaskTitle, setNewTaskTitle] = useState("");
-  const [selectedDate, setSelectedDate] = useState(new Date(2024, 2, 26));
+  const [selectedDate, setSelectedDate] = useState(new Date());
   const [showAddTask, setShowAddTask] = useState(false);
 
   // Get week days around selected date
@@ -76,8 +76,10 @@ export default function Dashboard() {
     const days = [];
     const currentDate = new Date(selectedDate);
     const dayOfWeek = currentDate.getDay();
+    // Adjust to make Monday the first day (0=Sunday becomes 6, 1=Monday becomes 0, etc.)
+    const mondayOffset = dayOfWeek === 0 ? 6 : dayOfWeek - 1;
     const startOfWeek = new Date(currentDate);
-    startOfWeek.setDate(currentDate.getDate() - dayOfWeek);
+    startOfWeek.setDate(currentDate.getDate() - mondayOffset);
 
     for (let i = 0; i < 7; i++) {
       const day = new Date(startOfWeek);
@@ -103,7 +105,7 @@ export default function Dashboard() {
       const newTask: Task = {
         id: Date.now().toString(),
         title: newTaskTitle,
-        date: selectedDate,
+        date: new Date(selectedDate.getFullYear(), selectedDate.getMonth(), selectedDate.getDate()),
         priority: "Medium",
         progress: 0,
       };
@@ -115,6 +117,18 @@ export default function Dashboard() {
 
   const handleDeleteTask = (id: string) => {
     setTasks(tasks.filter((task) => task.id !== id));
+  };
+
+  const handlePreviousWeek = () => {
+    const newDate = new Date(selectedDate);
+    newDate.setDate(selectedDate.getDate() - 7);
+    setSelectedDate(newDate);
+  };
+
+  const handleNextWeek = () => {
+    const newDate = new Date(selectedDate);
+    newDate.setDate(selectedDate.getDate() + 7);
+    setSelectedDate(newDate);
   };
 
   const handleUpdateProgress = (id: string, newProgress: number) => {
@@ -142,30 +156,44 @@ export default function Dashboard() {
   const getPriorityColor = (priority: string) => {
     switch (priority) {
       case "High":
-        return "bg-primary text-primary-foreground";
+        return "bg-[#7a4bf4] text-white";
       case "Medium":
-        return "bg-primary text-primary-foreground";
+        return "bg-[#9a6bff] text-white";
       case "Low":
-        return "bg-gray-200 text-gray-800";
+        return "bg-slate-200 text-slate-700";
       default:
         return "bg-gray-100 text-gray-800";
     }
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary via-purple-400 to-purple-300">
+    <div className="min-h-screen bg-[#f4f6ff]">
       <Header isLoggedIn={true} showNav={true} />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Decorative blurs */}
+        <div className="fixed -left-24 top-10 h-64 w-64 rounded-full bg-[#c8b5ff]/30 blur-3xl" />
+        <div className="fixed right-0 top-20 h-80 w-80 rounded-full bg-[#d2deff]/60 blur-2xl" />
+
         {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-white text-3xl font-bold">Today</h1>
+        <div className="mb-8 relative z-10">
+          <h1 className="text-slate-900 text-3xl font-bold">Today</h1>
         </div>
 
         {/* Date selector cards */}
-        <div className="mb-8 flex gap-3 overflow-x-auto pb-4">
-          {weekDays.map((day, index) => {
+        <div className="mb-8 flex items-center gap-3 relative z-10">
+          <button
+            onClick={handlePreviousWeek}
+            className="flex-shrink-0 w-10 h-10 flex items-center justify-center rounded-lg bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 transition"
+            aria-label="Previous week"
+          >
+            <ChevronLeft size={20} />
+          </button>
+          
+          <div className="flex gap-2 flex-1 justify-between">
+            {weekDays.map((day, index) => {
             const dayNames = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+            const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
             const isSelected =
               day.getDate() === selectedDate.getDate() &&
               day.getMonth() === selectedDate.getMonth();
@@ -174,33 +202,43 @@ export default function Dashboard() {
               <button
                 key={index}
                 onClick={() => setSelectedDate(day)}
-                className={`flex-shrink-0 w-16 py-3 rounded-xl font-semibold text-center transition ${
+                className={`flex-1 min-w-[80px] py-3 rounded-xl font-semibold text-center transition ${
                   isSelected
-                    ? "bg-white text-primary font-bold"
-                    : "bg-white bg-opacity-20 text-white hover:bg-opacity-35"
+                    ? "bg-[#7a4bf4] text-white shadow-lg"
+                    : "bg-white text-slate-700 hover:bg-slate-50 border border-slate-200"
                 }`}
               >
                 <div className="text-xs">{dayNames[index]}</div>
-                <div className="text-lg">{day.getDate()}</div>
+                <div className="text-lg font-bold">{day.getDate()}</div>
+                <div className="text-xs opacity-70">{monthNames[day.getMonth()]}</div>
               </button>
             );
           })}
+          </div>
+          
+          <button
+            onClick={handleNextWeek}
+            className="flex-shrink-0 w-10 h-10 flex items-center justify-center rounded-lg bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 transition"
+            aria-label="Next week"
+          >
+            <ChevronRight size={20} />
+          </button>
         </div>
 
         {/* Tasks section */}
-        <div className="space-y-4 mb-8">
+        <div className="space-y-4 mb-8 relative z-10">
           {/* Category label */}
           {filteredTasks.length > 0 && (
-            <div className="text-white text-sm font-bold opacity-70 uppercase">
+            <div className="text-slate-700 text-sm font-bold opacity-70 uppercase">
               {filteredTasks[0].category || "TASKS"}
             </div>
           )}
 
           {/* Task cards */}
           {filteredTasks.length === 0 ? (
-            <div className="bg-white bg-opacity-20 backdrop-blur-md rounded-xl p-8 text-center text-white">
-              <p className="text-lg">No tasks for today</p>
-              <p className="text-sm text-white text-opacity-70">
+            <div className="bg-white border border-slate-200 rounded-xl p-8 text-center shadow-sm">
+              <p className="text-lg text-slate-900">No tasks for today</p>
+              <p className="text-sm text-slate-500">
                 Add a task to get started
               </p>
             </div>
@@ -208,13 +246,13 @@ export default function Dashboard() {
             filteredTasks.map((task) => (
               <div
                 key={task.id}
-                className="bg-white bg-opacity-20 backdrop-blur-md rounded-xl p-4 text-white hover:bg-opacity-30 transition group"
+                className="bg-white border border-slate-200 rounded-xl p-4 hover:shadow-lg transition group"
               >
                 <div className="flex items-center justify-between mb-3">
-                  <h3 className="text-lg font-semibold">{task.title}</h3>
+                  <h3 className="text-lg font-semibold text-slate-900">{task.title}</h3>
                   <button
                     onClick={() => handleDeleteTask(task.id)}
-                    className="opacity-0 group-hover:opacity-100 transition text-white hover:text-red-300"
+                    className="opacity-0 group-hover:opacity-100 transition text-slate-400 hover:text-red-500"
                   >
                     <Trash2 size={18} />
                   </button>
@@ -223,14 +261,14 @@ export default function Dashboard() {
                 {/* Progress bar */}
                 <div className="mb-3">
                   <div className="flex justify-between items-center mb-2">
-                    <span className="text-sm text-white text-opacity-80">
+                    <span className="text-sm text-slate-600">
                       Progress
                     </span>
-                    <span className="text-sm font-semibold">{task.progress}%</span>
+                    <span className="text-sm font-semibold text-slate-900">{task.progress}%</span>
                   </div>
-                  <div className="w-full h-2 bg-white bg-opacity-20 rounded-full overflow-hidden">
+                  <div className="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
                     <div
-                      className="h-full bg-white rounded-full transition-all duration-300"
+                      className="h-full bg-[#7a4bf4] rounded-full transition-all duration-300"
                       style={{ width: `${task.progress}%` }}
                     ></div>
                   </div>
@@ -253,7 +291,7 @@ export default function Dashboard() {
                     onChange={(e) =>
                       handleUpdateProgress(task.id, Number(e.target.value))
                     }
-                    className="w-24 h-1 accent-white cursor-pointer"
+                    className="w-24 h-1 accent-[#7a4bf4] cursor-pointer"
                   />
                 </div>
               </div>
@@ -262,36 +300,22 @@ export default function Dashboard() {
         </div>
 
         {/* Add task section */}
-        <div className="flex gap-3 items-center">
+        <div className="flex gap-3 items-center relative z-10">
           <input
             type="text"
             value={newTaskTitle}
             onChange={(e) => setNewTaskTitle(e.target.value)}
             onKeyPress={(e) => e.key === "Enter" && handleAddTask()}
             placeholder="Write a task..."
-            className="flex-1 px-4 py-3 rounded-lg bg-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50"
+            className="flex-1 px-4 py-3 rounded-lg bg-white border border-slate-200 placeholder-slate-400 text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#7a4bf4] focus:border-transparent"
           />
           <button
             onClick={handleAddTask}
-            className="bg-pink-300 hover:bg-pink-400 text-white px-6 py-3 rounded-lg font-semibold transition flex items-center gap-2"
+            className="bg-gradient-to-r from-[#7a4bf4] to-[#9a6bff] hover:shadow-lg hover:scale-105 text-white px-6 py-3 rounded-lg font-semibold transition flex items-center gap-2 shadow-md"
           >
             <Plus size={20} />
             Add
           </button>
-        </div>
-
-        {/* Decorative waves */}
-        <div className="absolute bottom-0 left-0 right-0 pointer-events-none">
-          <svg
-            className="w-full h-48"
-            viewBox="0 0 1440 320"
-            preserveAspectRatio="none"
-          >
-            <path
-              fill="rgba(255, 255, 255, 0.1)"
-              d="M0,96L48,112C96,128,192,160,288,160C384,160,480,128,576,122.7C672,117,768,139,864,144C960,149,1056,139,1152,128C1248,117,1344,107,1392,101.3L1440,96L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"
-            ></path>
-          </svg>
         </div>
       </div>
     </div>

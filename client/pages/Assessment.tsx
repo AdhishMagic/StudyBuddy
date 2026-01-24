@@ -92,14 +92,14 @@ export default function Assessment() {
         {/* Header */}
         <div className="flex justify-between items-center mb-8">
           <div>
-            <h1 className="text-3xl font-bold text-primary mb-2">
+            <h1 className="text-3xl font-bold text-slate-900 mb-2">
               {getDateRange()}
             </h1>
             <p className="text-gray-600">Manage your assessments</p>
           </div>
           <button
             onClick={() => setShowForm(!showForm)}
-            className="bg-primary text-primary-foreground px-6 py-3 rounded-lg font-semibold hover:bg-primary-600 transition flex items-center gap-2"
+            className="bg-gradient-to-r from-[#7a4bf4] to-[#9a6bff] text-white px-6 py-3 rounded-lg font-semibold hover:shadow-lg hover:scale-105 transition flex items-center gap-2 shadow-md"
           >
             <Plus size={20} />
             Add Assessment
@@ -136,13 +136,13 @@ export default function Assessment() {
                   {selectedSubjects.map((subject) => (
                     <div
                       key={subject}
-                      className="bg-primary text-primary-foreground px-4 py-2 rounded-full flex items-center gap-2"
+                      className="bg-[#7a4bf4] text-white px-4 py-2 rounded-full flex items-center gap-2"
                     >
                       {subject}
                       <button
                         onClick={() => removeSubject(subject)}
                         type="button"
-                        className="hover:bg-primary-600 rounded-full p-1"
+                        className="hover:bg-[#6a3be4] rounded-full p-1"
                       >
                         <X size={16} />
                       </button>
@@ -159,7 +159,7 @@ export default function Assessment() {
                       type="button"
                       className={`px-4 py-2 rounded-lg font-medium transition ${
                         selectedSubjects.includes(subject)
-                          ? "bg-primary text-primary-foreground"
+                          ? "bg-[#7a4bf4] text-white"
                           : "bg-gray-200 text-gray-700 hover:bg-gray-300"
                       }`}
                     >
@@ -178,7 +178,7 @@ export default function Assessment() {
                       e.key === "Enter" && (e.preventDefault(), addCustomSubject())
                     }
                     placeholder="Add Subject"
-                    className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                    className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#7a4bf4] focus:border-transparent"
                   />
                   <button
                     onClick={addCustomSubject}
@@ -199,8 +199,7 @@ export default function Assessment() {
                   <input
                     type="date"
                     value={date}
-                    onChange={(e) => setDate(e.target.value)}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#7a4bf4] focus:border-transparent"
                   />
                 </div>
 
@@ -211,8 +210,7 @@ export default function Assessment() {
                   <input
                     type="time"
                     value={startTime}
-                    onChange={(e) => setStartTime(e.target.value)}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#7a4bf4] focus:border-transparent"
                   />
                 </div>
 
@@ -223,8 +221,7 @@ export default function Assessment() {
                   <input
                     type="time"
                     value={endTime}
-                    onChange={(e) => setEndTime(e.target.value)}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#7a4bf4] focus:border-transparent"
                   />
                 </div>
               </div>
@@ -242,7 +239,7 @@ export default function Assessment() {
                       type="button"
                       className={`px-6 py-2 rounded-full font-semibold transition ${
                         priority === p
-                          ? "bg-primary text-primary-foreground"
+                          ? "bg-[#7a4bf4] text-white"
                           : "bg-gray-200 text-gray-700 hover:bg-gray-300"
                       }`}
                     >
@@ -256,7 +253,7 @@ export default function Assessment() {
               <div className="flex gap-4 pt-4">
                 <button
                   type="submit"
-                  className="flex-1 bg-primary text-primary-foreground py-3 rounded-lg font-semibold hover:bg-primary-600 transition"
+                  className="flex-1 bg-gradient-to-r from-[#7a4bf4] to-[#9a6bff] text-white py-3 rounded-lg font-semibold hover:shadow-lg hover:scale-105 transition shadow-md"
                 >
                   Assign Task
                 </button>
@@ -283,7 +280,7 @@ export default function Assessment() {
             </p>
             <button
               onClick={() => setShowForm(true)}
-              className="bg-primary text-primary-foreground px-8 py-3 rounded-lg font-semibold hover:bg-primary-600 transition"
+              className="bg-gradient-to-r from-[#7a4bf4] to-[#9a6bff] text-white px-8 py-3 rounded-lg font-semibold hover:shadow-lg hover:scale-105 transition shadow-md"
             >
               Create Assessment
             </button>
@@ -326,7 +323,7 @@ export default function Assessment() {
                   {assessment.subjects.map((subject) => (
                     <span
                       key={subject}
-                      className="bg-primary bg-opacity-10 text-primary px-3 py-1 rounded-full text-sm font-medium"
+                      className="bg-[#7a4bf4] bg-opacity-10 text-[#7a4bf4] px-3 py-1 rounded-full text-sm font-medium"
                     >
                       {subject}
                     </span>

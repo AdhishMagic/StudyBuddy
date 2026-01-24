@@ -128,4 +128,10 @@
     overflow-x: auto;
     white-space: pre;
   }
+
+  /* Hide native Edge password reveal/clear icons so only our custom toggle shows */
+  input[type="password"]::-ms-reveal,
+  input[type="password"]::-ms-clear {
+    display: none;
+  }
 }
