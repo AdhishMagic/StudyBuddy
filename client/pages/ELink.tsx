@@ -101,12 +101,12 @@ export default function ELink() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-900">
+    <div className="min-h-screen bg-[#f4f6ff] dark:bg-slate-950 transition-colors">
       <Header isLoggedIn={true} showNav={true} />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Main content card */}
-        <div className="bg-white rounded-2xl shadow-2xl overflow-hidden">
+        <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-2xl overflow-hidden transition-colors">
           <div className="grid lg:grid-cols-3 gap-8 p-8">
             {/* Left side - Video Player */}
             <div className="lg:col-span-2">
@@ -126,13 +126,13 @@ export default function ELink() {
                   </h2>
 
                   <div className="flex gap-4">
-                    <div className="bg-white bg-opacity-20 backdrop-blur-md rounded-2xl px-6 py-3 flex items-center gap-2">
+                    <div className="bg-white bg-opacity-20 backdrop-blur-md rounded-2xl px-6 py-3 flex items-center gap-2 transition-all duration-200 hover:bg-white/30 hover:scale-[1.03] hover:shadow-xl">
                       <Video size={20} />
                       <span className="font-semibold">
                         {selectedCourse.videoCount} Videos
                       </span>
                     </div>
-                    <div className="bg-white bg-opacity-20 backdrop-blur-md rounded-2xl px-6 py-3 flex items-center gap-2">
+                    <div className="bg-white bg-opacity-20 backdrop-blur-md rounded-2xl px-6 py-3 flex items-center gap-2 transition-all duration-200 hover:bg-white/30 hover:scale-[1.03] hover:shadow-xl">
                       <BookOpen size={20} />
                       <span className="font-semibold">
                         {selectedCourse.classCount} Class
@@ -143,7 +143,7 @@ export default function ELink() {
               </div>
 
               {/* Video metadata */}
-              <div className="flex items-center justify-between text-gray-600 mb-6">
+              <div className="flex items-center justify-between text-gray-600 dark:text-gray-400 mb-6">
                 <div className="flex items-center gap-2">
                   <Clock size={18} />
                   <span>{selectedCourse.duration}</span>
@@ -164,7 +164,7 @@ export default function ELink() {
 
             {/* Right side - Queue */}
             <div className="lg:col-span-1">
-              <h3 className="text-lg font-bold text-gray-800 mb-4">Queue</h3>
+              <h3 className="text-lg font-bold text-gray-800 dark:text-white mb-4">Queue</h3>
 
               {/* Link input */}
               <div className="mb-6 relative">
@@ -176,7 +176,7 @@ export default function ELink() {
                     if (e.key === "Enter") handleAddLink();
                   }}
                   placeholder="paste the link"
-                  className="w-full px-4 py-3 bg-gray-100 rounded-full border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                  className="w-full px-4 py-3 bg-gray-100 dark:bg-slate-800 rounded-full border border-gray-200 dark:border-slate-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
                 />
                 <button
                   onClick={handleAddLink}
@@ -195,7 +195,7 @@ export default function ELink() {
                     className={`w-full text-left p-3 rounded-lg transition ${
                       selectedCourse.currentVideo.id === item.id
                         ? "bg-primary text-white"
-                        : "hover:bg-gray-100"
+                        : "hover:bg-gray-100 dark:hover:bg-slate-800 text-gray-900 dark:text-white"
                     }`}
                   >
                     <div className="flex items-start gap-3">
@@ -214,7 +214,7 @@ export default function ELink() {
                           className={`text-xs ${
                             selectedCourse.currentVideo.id === item.id
                               ? "text-white text-opacity-70"
-                              : "text-gray-500"
+                              : "text-gray-500 dark:text-gray-400"
                           }`}
                         >
                           {item.duration}
@@ -230,7 +230,7 @@ export default function ELink() {
         </div>
 
         {/* Placeholder for more courses */}
-        <div className="mt-8 text-white">
+        <div className="mt-8 text-gray-900 dark:text-white">
           <h3 className="text-2xl font-bold mb-4">More Courses</h3>
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
             {[1, 2, 3, 4].map((i) => (

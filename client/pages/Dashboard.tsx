@@ -167,7 +167,7 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-[#f4f6ff]">
+    <div className="min-h-screen bg-[#f4f6ff] dark:bg-slate-950 transition-colors">
       <Header isLoggedIn={true} showNav={true} />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -184,7 +184,7 @@ export default function Dashboard() {
         <div className="mb-8 flex items-center gap-3 relative z-10">
           <button
             onClick={handlePreviousWeek}
-            className="flex-shrink-0 w-10 h-10 flex items-center justify-center rounded-lg bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 transition"
+            className="flex-shrink-0 w-10 h-10 flex items-center justify-center rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700 transition"
             aria-label="Previous week"
           >
             <ChevronLeft size={20} />
@@ -205,7 +205,7 @@ export default function Dashboard() {
                 className={`flex-1 min-w-[80px] py-3 rounded-xl font-semibold text-center transition ${
                   isSelected
                     ? "bg-[#7a4bf4] text-white shadow-lg"
-                    : "bg-white text-slate-700 hover:bg-slate-50 border border-slate-200"
+                    : "bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700"
                 }`}
               >
                 <div className="text-xs">{dayNames[index]}</div>
@@ -218,7 +218,7 @@ export default function Dashboard() {
           
           <button
             onClick={handleNextWeek}
-            className="flex-shrink-0 w-10 h-10 flex items-center justify-center rounded-lg bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 transition"
+            className="flex-shrink-0 w-10 h-10 flex items-center justify-center rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700 transition"
             aria-label="Next week"
           >
             <ChevronRight size={20} />
@@ -236,9 +236,9 @@ export default function Dashboard() {
 
           {/* Task cards */}
           {filteredTasks.length === 0 ? (
-            <div className="bg-white border border-slate-200 rounded-xl p-8 text-center shadow-sm">
-              <p className="text-lg text-slate-900">No tasks for today</p>
-              <p className="text-sm text-slate-500">
+            <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-8 text-center shadow-sm">
+              <p className="text-lg text-slate-900 dark:text-white">No tasks for today</p>
+              <p className="text-sm text-slate-500 dark:text-slate-400">
                 Add a task to get started
               </p>
             </div>
@@ -246,10 +246,10 @@ export default function Dashboard() {
             filteredTasks.map((task) => (
               <div
                 key={task.id}
-                className="bg-white border border-slate-200 rounded-xl p-4 hover:shadow-lg transition group"
+                className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-4 hover:shadow-lg transition group"
               >
                 <div className="flex items-center justify-between mb-3">
-                  <h3 className="text-lg font-semibold text-slate-900">{task.title}</h3>
+                  <h3 className="text-lg font-semibold text-slate-900 dark:text-white">{task.title}</h3>
                   <button
                     onClick={() => handleDeleteTask(task.id)}
                     className="opacity-0 group-hover:opacity-100 transition text-slate-400 hover:text-red-500"
@@ -261,12 +261,12 @@ export default function Dashboard() {
                 {/* Progress bar */}
                 <div className="mb-3">
                   <div className="flex justify-between items-center mb-2">
-                    <span className="text-sm text-slate-600">
+                    <span className="text-sm text-slate-600 dark:text-slate-400">
                       Progress
                     </span>
-                    <span className="text-sm font-semibold text-slate-900">{task.progress}%</span>
+                    <span className="text-sm font-semibold text-slate-900 dark:text-white">{task.progress}%</span>
                   </div>
-                  <div className="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
+                  <div className="w-full h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
                     <div
                       className="h-full bg-[#7a4bf4] rounded-full transition-all duration-300"
                       style={{ width: `${task.progress}%` }}
@@ -307,7 +307,7 @@ export default function Dashboard() {
             onChange={(e) => setNewTaskTitle(e.target.value)}
             onKeyPress={(e) => e.key === "Enter" && handleAddTask()}
             placeholder="Write a task..."
-            className="flex-1 px-4 py-3 rounded-lg bg-white border border-slate-200 placeholder-slate-400 text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#7a4bf4] focus:border-transparent"
+            className="flex-1 px-4 py-3 rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 placeholder-slate-400 dark:placeholder-slate-500 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#7a4bf4] focus:border-transparent"
           />
           <button
             onClick={handleAddTask}

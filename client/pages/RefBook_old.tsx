@@ -13,10 +13,6 @@ interface Book {
   cover: string;
   image?: string;
   userRating?: number;
-  summary?: string;
-  pages?: number;
-  publisher?: string;
-  year?: number;
 }
 
 const motivationalMessages = [
@@ -45,7 +41,6 @@ const motivationalMessages = [
 export default function RefBook() {
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [currentMessageIndex, setCurrentMessageIndex] = useState(0);
-  const [selectedBook, setSelectedBook] = useState<Book | null>(null);
   const [books, setBooks] = useState<Book[]>([
     {
       id: "1",
@@ -56,10 +51,6 @@ export default function RefBook() {
       reviews: 234,
       cover: "bg-yellow-300",
       image: "https://images.unsplash.com/photo-1516979187457-635ffe35ff15?w=300&h=400&fit=crop",
-      summary: "Learn the model that moves your users to action. Hooked reveals how some of the world's most habit-forming products manipulate our psychology to drive us toward them. This groundbreaking book explores the psychology of why we develop habits and how companies leverage this knowledge to create engaging products.",
-      pages: 256,
-      publisher: "Penguin Publishing",
-      year: 2014,
     },
     {
       id: "2",
@@ -70,10 +61,6 @@ export default function RefBook() {
       reviews: 156,
       cover: "bg-blue-500",
       image: "https://images.unsplash.com/photo-1561070791-2526d30994b5?w=300&h=400&fit=crop",
-      summary: "A comprehensive guide to modern UX design methodologies. This book covers the entire design process from research to implementation with real-world examples. Perfect for designers looking to master user-centered design principles.",
-      pages: 384,
-      publisher: "Design Publications",
-      year: 2019,
     },
     {
       id: "3",
@@ -84,10 +71,6 @@ export default function RefBook() {
       reviews: 89,
       cover: "bg-gray-400",
       image: "https://images.unsplash.com/photo-1571207417996-4b97a78bff91?w=300&h=400&fit=crop",
-      summary: "Explore the innovative problem-solving methodology that's revolutionizing businesses worldwide. Learn how to apply design thinking principles to tackle complex challenges. This book provides practical frameworks and case studies.",
-      pages: 320,
-      publisher: "Innovation Press",
-      year: 2018,
     },
     {
       id: "4",
@@ -98,10 +81,6 @@ export default function RefBook() {
       reviews: 204,
       cover: "bg-gray-600",
       image: "https://images.unsplash.com/photo-1557821552-17105176677c?w=300&h=400&fit=crop",
-      summary: "Discover why great companies fail and how to build lasting disruptive businesses. Essential reading for entrepreneurs and business leaders. The book examines the challenges of innovation and provides strategies for staying competitive.",
-      pages: 432,
-      publisher: "Business Press",
-      year: 2011,
     },
     {
       id: "5",
@@ -112,10 +91,6 @@ export default function RefBook() {
       reviews: 123,
       cover: "bg-yellow-400",
       image: "https://images.unsplash.com/photo-1561070791-2526d30994b5?w=300&h=400&fit=crop",
-      summary: "Apply Lean principles to UX design. Learn how to get out of the building and test your assumptions with real users to create products people want. This practical guide combines agile methodology with user experience design.",
-      pages: 280,
-      publisher: "Design Publications",
-      year: 2017,
     },
     {
       id: "6",
@@ -126,10 +101,6 @@ export default function RefBook() {
       reviews: 98,
       cover: "bg-orange-400",
       image: "https://images.unsplash.com/photo-1532012197267-da84d127e765?w=300&h=400&fit=crop",
-      summary: "A deep dive into agile UX practices and lean methodologies. Understand how to work efficiently with development teams while maintaining design excellence. Learn collaboration strategies that improve product outcomes.",
-      pages: 296,
-      publisher: "Design Publications",
-      year: 2016,
     },
     {
       id: "7",
@@ -140,10 +111,6 @@ export default function RefBook() {
       reviews: 145,
       cover: "bg-indigo-500",
       image: "https://images.unsplash.com/photo-1495446815901-a7297e61a87d?w=300&h=400&fit=crop",
-      summary: "An epic tale of adventure and courage. Follow the journey of a young protagonist as they navigate a world filled with mystery, danger, and unexpected alliances. A thrilling story that will keep you engaged until the very end.",
-      pages: 445,
-      publisher: "Fiction Press",
-      year: 2020,
     },
     {
       id: "8",
@@ -154,10 +121,6 @@ export default function RefBook() {
       reviews: 167,
       cover: "bg-red-600",
       image: "https://images.unsplash.com/photo-1507842217343-583f20270319?w=300&h=400&fit=crop",
-      summary: "A thrilling mystery set in a post-apocalyptic world. Uncover the secrets of the ghost runners and their mission to save humanity from extinction. Packed with action, suspense, and emotional depth.",
-      pages: 389,
-      publisher: "Fiction Press",
-      year: 2021,
     },
     {
       id: "9",
@@ -168,10 +131,6 @@ export default function RefBook() {
       reviews: 201,
       cover: "bg-blue-400",
       image: "https://images.unsplash.com/photo-1446776653964-20c1d3a81b06?w=300&h=400&fit=crop",
-      summary: "Explore fascinating scientific concepts wrapped in an engaging narrative. Discover the origins of consciousness and the future of artificial intelligence. A mind-bending exploration of what it means to be human.",
-      pages: 512,
-      publisher: "Science Press",
-      year: 2022,
     },
     {
       id: "10",
@@ -182,10 +141,6 @@ export default function RefBook() {
       reviews: 134,
       cover: "bg-cyan-400",
       image: "https://images.unsplash.com/photo-1507842217343-583f20270319?w=300&h=400&fit=crop",
-      summary: "Master modern learning techniques and strategies for effective education. This book covers neuroscience-backed methods to accelerate learning and retention. Perfect for students and educators alike.",
-      pages: 356,
-      publisher: "Education Press",
-      year: 2021,
     },
     {
       id: "11",
@@ -196,10 +151,6 @@ export default function RefBook() {
       reviews: 178,
       cover: "bg-green-600",
       image: "https://images.unsplash.com/photo-1552664730-d307ca884978?w=300&h=400&fit=crop",
-      summary: "Build a company culture that attracts and retains top talent. Learn the principles of exceptional leadership and organizational excellence. This book combines research with practical advice for modern leaders.",
-      pages: 401,
-      publisher: "Business Press",
-      year: 2019,
     },
     {
       id: "12",
@@ -210,10 +161,6 @@ export default function RefBook() {
       reviews: 112,
       cover: "bg-purple-400",
       image: "https://images.unsplash.com/photo-1495446815901-a7297e61a87d?w=300&h=400&fit=crop",
-      summary: "A poignant family drama that explores relationships, redemption, and the power of forgiveness. A deeply moving story that will stay with you long after reading. Beautifully written with unforgettable characters.",
-      pages: 368,
-      publisher: "Fiction Press",
-      year: 2018,
     },
   ]);
 
@@ -254,136 +201,6 @@ export default function RefBook() {
   return (
     <div className="min-h-screen bg-white dark:bg-slate-950 transition-colors">
       <Header isLoggedIn={true} showNav={true} />
-
-      {/* Modal for book details */}
-      {selectedBook && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className="bg-white dark:bg-slate-900 rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl">
-            {/* Close button */}
-            <div className="sticky top-0 flex items-center justify-between p-6 border-b border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900">
-              <h1 className="text-2xl font-bold text-slate-900 dark:text-white">Book Details</h1>
-              <button
-                onClick={() => setSelectedBook(null)}
-                className="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 text-2xl font-bold w-8 h-8 flex items-center justify-center"
-              >
-                ×
-              </button>
-            </div>
-
-            {/* Content */}
-            <div className="p-6">
-              {/* Book header */}
-              <div className="grid md:grid-cols-3 gap-6 mb-8">
-                {/* Book cover */}
-                <div>
-                  <div
-                    className={`aspect-[3/4] rounded-lg overflow-hidden flex items-center justify-center ${selectedBook.cover} shadow-lg`}
-                    style={{
-                      backgroundImage: selectedBook.image ? `url('${selectedBook.image}')` : "none",
-                      backgroundSize: "cover",
-                      backgroundPosition: "center",
-                    }}
-                  >
-                    {!selectedBook.image && (
-                      <div className="text-white/60 text-center px-4">
-                        <p className="text-sm font-bold">{selectedBook.title}</p>
-                      </div>
-                    )}
-                  </div>
-                </div>
-
-                {/* Book info */}
-                <div className="md:col-span-2">
-                  <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-3">
-                    {selectedBook.title}
-                  </h2>
-
-                  <p className="text-lg text-purple-600 dark:text-purple-400 font-semibold mb-4">
-                    by {selectedBook.author}
-                  </p>
-
-                  {/* Rating and reviews */}
-                  <div className="flex items-center gap-4 mb-6">
-                    <div className="flex gap-1">
-                      {[...Array(5)].map((_, i) => (
-                        <Star
-                          key={i}
-                          size={20}
-                          fill={selectedBook.rating >= i + 1 ? "#FCD34D" : "none"}
-                          className="text-yellow-400"
-                        />
-                      ))}
-                    </div>
-                    <span className="text-lg font-semibold text-slate-900 dark:text-white">
-                      {selectedBook.rating} / 5
-                    </span>
-                    <span className="text-gray-600 dark:text-gray-400">
-                      ({selectedBook.reviews} reviews)
-                    </span>
-                  </div>
-
-                  {/* Quick info */}
-                  <div className="space-y-2">
-                    <div className="text-sm">
-                      <span className="text-gray-600 dark:text-gray-400">Category:</span>
-                      <span className="ml-2 font-semibold text-slate-900 dark:text-white">
-                        {selectedBook.category}
-                      </span>
-                    </div>
-                    {selectedBook.pages && (
-                      <div className="text-sm">
-                        <span className="text-gray-600 dark:text-gray-400">Pages:</span>
-                        <span className="ml-2 font-semibold text-slate-900 dark:text-white">
-                          {selectedBook.pages}
-                        </span>
-                      </div>
-                    )}
-                    {selectedBook.publisher && (
-                      <div className="text-sm">
-                        <span className="text-gray-600 dark:text-gray-400">Publisher:</span>
-                        <span className="ml-2 font-semibold text-slate-900 dark:text-white">
-                          {selectedBook.publisher}
-                        </span>
-                      </div>
-                    )}
-                    {selectedBook.year && (
-                      <div className="text-sm">
-                        <span className="text-gray-600 dark:text-gray-400">Year:</span>
-                        <span className="ml-2 font-semibold text-slate-900 dark:text-white">
-                          {selectedBook.year}
-                        </span>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </div>
-
-              {/* Summary section */}
-              <div className="border-t border-gray-200 dark:border-slate-700 pt-8">
-                <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-4">
-                  Book Summary
-                </h3>
-                <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
-                  {selectedBook.summary}
-                </p>
-              </div>
-
-              {/* Action buttons */}
-              <div className="mt-8 flex gap-4">
-                <button className="flex-1 bg-gradient-to-r from-[#7a4bf4] to-[#9a6bff] text-white py-3 rounded-lg font-semibold hover:shadow-lg transition">
-                  Read Now
-                </button>
-                <button
-                  onClick={() => setSelectedBook(null)}
-                  className="flex-1 border-2 border-gray-300 dark:border-slate-600 text-slate-900 dark:text-white py-3 rounded-lg font-semibold hover:bg-gray-100 dark:hover:bg-slate-800 transition"
-                >
-                  Close
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Motivational Banner */}
@@ -538,10 +355,7 @@ export default function RefBook() {
                   </p>
 
                   {/* View button */}
-                  <button 
-                    onClick={() => setSelectedBook(book)}
-                    className="w-full bg-gradient-to-r from-[#7a4bf4] to-[#9a6bff] text-white py-2 rounded-lg text-sm font-semibold hover:shadow-lg hover:scale-105 transition flex items-center justify-center gap-2"
-                  >
+                  <button className="w-full bg-gradient-to-r from-[#7a4bf4] to-[#9a6bff] text-white py-2 rounded-lg text-sm font-semibold hover:shadow-lg hover:scale-105 transition flex items-center justify-center gap-2">
                     View
                   </button>
                 </div>

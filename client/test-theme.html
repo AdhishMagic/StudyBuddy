@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Theme Test</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+        }
+    </script>
+</head>
+<body>
+    <div class="min-h-screen bg-white dark:bg-slate-950 p-8 transition-colors">
+        <div class="max-w-4xl mx-auto">
+            <h1 class="text-4xl font-bold mb-6 text-slate-900 dark:text-white">Theme Tester</h1>
+            
+            <div class="bg-white dark:bg-slate-900 p-6 rounded-lg shadow-lg mb-6">
+                <h2 class="text-2xl font-bold mb-4 text-slate-900 dark:text-white">Current Theme Status</h2>
+                <p class="mb-2 text-slate-700 dark:text-slate-300">HTML class: <span id="htmlClass" class="font-mono bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded"></span></p>
+                <p class="mb-2 text-slate-700 dark:text-slate-300">LocalStorage theme: <span id="savedTheme" class="font-mono bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded"></span></p>
+                <p class="mb-4 text-slate-700 dark:text-slate-300">Expected: <span id="expected" class="font-mono bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded"></span></p>
+                
+                <button onclick="toggleTheme()" class="bg-gradient-to-r from-purple-600 to-purple-700 text-white px-6 py-2 rounded-lg font-semibold hover:shadow-lg transition-all mr-2">
+                    Toggle Theme
+                </button>
+                <button onclick="clearTheme()" class="bg-red-500 text-white px-6 py-2 rounded-lg font-semibold hover:shadow-lg transition-all">
+                    Clear Theme & Reload
+                </button>
+            </div>
+            
+            <div class="grid grid-cols-2 gap-4">
+                <div class="bg-purple-600 text-white p-6 rounded-lg">
+                    <h3 class="font-bold text-xl mb-2">Purple Box</h3>
+                    <p>Should be purple in both themes</p>
+                </div>
+                <div class="bg-white dark:bg-slate-800 p-6 rounded-lg shadow-lg border border-slate-200 dark:border-slate-700">
+                    <h3 class="font-bold text-xl mb-2 text-slate-900 dark:text-white">Adaptive Box</h3>
+                    <p class="text-slate-700 dark:text-slate-300">White in light, dark in dark mode</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function updateStatus() {
+            const htmlEl = document.documentElement;
+            const hasClass = htmlEl.classList.contains('dark');
+            const savedTheme = localStorage.getItem('theme');
+            
+            document.getElementById('htmlClass').textContent = hasClass ? 'dark' : '(no dark class)';
+            document.getElementById('savedTheme').textContent = savedTheme || '(not set)';
+            document.getElementById('expected').textContent = hasClass ? 'Dark Mode' : 'Light Mode';
+        }
+        
+        function toggleTheme() {
+            const htmlEl = document.documentElement;
+            const isDark = htmlEl.classList.contains('dark');
+            
+            if (isDark) {
+                htmlEl.classList.remove('dark');
+                localStorage.setItem('theme', 'light');
+            } else {
+                htmlEl.classList.add('dark');
+                localStorage.setItem('theme', 'dark');
+            }
+            
+            updateStatus();
+        }
+        
+        function clearTheme() {
+            localStorage.removeItem('theme');
+            location.reload();
+        }
+        
+        // Initialize
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'dark') {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+        
+        updateStatus();
+        setInterval(updateStatus, 1000);
+    </script>
+</body>
+</html>

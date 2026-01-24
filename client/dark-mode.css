@@ -1,0 +1,42 @@
+/* Dark Mode Styling - Only applies when .dark class is present */
+.dark {
+  color-scheme: dark;
+}
+
+/* Ensure body and html have proper dark background */
+.dark body,
+.dark #root {
+  background-color: #020617 !important;
+  color: #f1f5f9;
+}
+
+.dark input,
+.dark textarea,
+.dark select {
+  background-color: #1e293b;
+  color: #f1f5f9;
+  border-color: #475569;
+}
+
+.dark input::placeholder,
+.dark textarea::placeholder {
+  color: #94a3b8;
+}
+
+.dark input:focus,
+.dark textarea:focus,
+.dark select:focus {
+  background-color: #0f172a;
+  border-color: #7a4bf4;
+}
+
+.dark button {
+  transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Light mode (default) */
+body,
+#root {
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+

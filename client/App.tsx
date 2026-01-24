@@ -38,13 +38,14 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
   return <>{children}</>;
 }
 
-const App = () => (
-  <BrowserRouter>
-    <Routes>
-      {/* Public routes */}
-      <Route path="/" element={<Index />} />
-      <Route path="/login" element={<Login />} />
-      <Route path="/signup" element={<Signup />} />
+const App = () => {
+  return (
+    <BrowserRouter>
+      <Routes>
+        {/* Public routes */}
+        <Route path="/" element={<Index />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
 
       {/* Protected routes */}
       <Route
@@ -83,7 +84,8 @@ const App = () => (
       {/* Catch-all route */}
       <Route path="*" element={<NotFound />} />
     </Routes>
-  </BrowserRouter>
-);
+    </BrowserRouter>
+  );
+};
 
 export default App;
