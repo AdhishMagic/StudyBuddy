@@ -7,6 +7,7 @@ import Dashboard from "./pages/Dashboard";
 import Assessment from "./pages/Assessment";
 import ELink from "./pages/ELink";
 import RefBook from "./pages/RefBook";
+import Profile from "./pages/Profile";
 import NotFound from "./pages/NotFound";
 
 // Protected route component
@@ -77,6 +78,15 @@ const App = () => {
         element={
           <ProtectedRoute>
             <RefBook />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/profile"
+        element={
+          <ProtectedRoute>
+            <Profile />
           </ProtectedRoute>
         }
       />

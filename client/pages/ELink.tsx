@@ -236,15 +236,15 @@ export default function ELink() {
             {[1, 2, 3, 4].map((i) => (
               <div
                 key={i}
-                className="bg-white bg-opacity-5 backdrop-blur-md rounded-xl p-4 border border-white border-opacity-10 hover:bg-opacity-10 transition cursor-pointer"
+                className="bg-white dark:bg-white/5 backdrop-blur-md rounded-xl p-4 border border-slate-200 dark:border-white/10 hover:bg-slate-50 dark:hover:bg-white/10 transition cursor-pointer shadow-sm"
               >
                 <div className="aspect-video bg-gradient-to-br from-primary to-purple-400 rounded-lg mb-3 flex items-center justify-center">
                   <Video size={32} className="text-white opacity-50" />
                 </div>
-                <h4 className="font-semibold text-sm text-white mb-1">
+                <h4 className="font-semibold text-sm text-slate-900 dark:text-white mb-1">
                   Course {i}
                 </h4>
-                <p className="text-xs text-white text-opacity-60">
+                <p className="text-xs text-slate-600 dark:text-white/60">
                   12 videos • 4.5 hours
                 </p>
               </div>

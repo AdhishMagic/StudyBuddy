@@ -143,9 +143,11 @@ export default function Landing() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <div className="flex items-center justify-center gap-2 mb-4">
-              <div className="w-8 h-8 bg-pink-300 rounded-full flex items-center justify-center text-xs font-bold">
-                SB
-              </div>
+              <img
+                src="/logo-small.ico"
+                alt="StudyBuddy Logo"
+                className="w-10 h-10 object-contain"
+              />
               <span className="text-xl font-bold">StudyBuddy</span>
             </div>
             <p className="text-gray-400">

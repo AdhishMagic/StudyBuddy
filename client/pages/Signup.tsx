@@ -4,6 +4,7 @@ import Header from "@/components/Header";
 import { Eye, EyeOff } from "lucide-react";
 
 export default function Signup() {
+  const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -17,7 +18,7 @@ export default function Signup() {
     e.preventDefault();
     setError("");
 
-    if (!email || !password || !confirmPassword) {
+    if (!fullName || !email || !password || !confirmPassword) {
       setError("All fields are required");
       return;
     }
@@ -41,6 +42,7 @@ export default function Signup() {
       localStorage.setItem(
         "user",
         JSON.stringify({
+          displayName: fullName,
           email,
           role: "student",
           createdAt: new Date().toISOString(),
@@ -62,10 +64,12 @@ export default function Signup() {
       // Simulate Google OAuth
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
+      const googleEmail = `user${Math.random().toString(36).substr(2, 9)}@gmail.com`;
       localStorage.setItem(
         "user",
         JSON.stringify({
-          email: `user${Math.random().toString(36).substr(2, 9)}@gmail.com`,
+          displayName: "Google User",
+          email: googleEmail,
           role: "student",
           authProvider: "google",
           createdAt: new Date().toISOString(),
@@ -175,6 +179,16 @@ export default function Signup() {
               )}
 
               <form onSubmit={handleSignup} className="mb-6 space-y-4">
+                <div>
+                  <label className="mb-2 block text-sm font-medium text-slate-700 dark:text-slate-300">Full name</label>
+                  <input
+                    type="text"
+                    value={fullName}
+                    onChange={(e) => setFullName(e.target.value)}
+                    placeholder="Your name"
+                    className="w-full rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 px-4 py-2 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 outline-none transition focus:border-[#7a4bf4] focus:bg-white dark:focus:bg-slate-700 focus:ring-2 focus:ring-[#7a4bf4]/30"
+                  />
+                </div>
                 <div>
                   <label className="mb-2 block text-sm font-medium text-slate-700 dark:text-slate-300">Email</label>
                   <input

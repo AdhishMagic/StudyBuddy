@@ -1,6 +1,76 @@
-import { useState, useEffect } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Header from "@/components/Header";
 import { Star, ShoppingCart } from "lucide-react";
+
+function escapeXml(text: string) {
+  return text
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/\"/g, "&quot;")
+    .replace(/'/g, "&apos;");
+}
+
+function fallbackCoverDataUrl(title: string, author?: string) {
+  const safeTitle = escapeXml(title);
+  const safeAuthor = author ? escapeXml(author) : "";
+  const svg = `
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="800" viewBox="0 0 600 800">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0f172a"/>
+      <stop offset="50%" stop-color="#1e293b"/>
+      <stop offset="100%" stop-color="#312e81"/>
+    </linearGradient>
+  </defs>
+  <rect width="600" height="800" fill="url(#g)"/>
+  <rect x="40" y="40" width="520" height="720" rx="28" fill="rgba(255,255,255,0.06)"/>
+  <text x="70" y="160" fill="#ffffff" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial" font-size="44" font-weight="800">
+    <tspan x="70" dy="0">${safeTitle}</tspan>
+  </text>
+  ${
+    safeAuthor
+      ? `<text x="70" y="240" fill="rgba(255,255,255,0.85)" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial" font-size="26" font-weight="600">by ${safeAuthor}</text>`
+      : ""
+  }
+  <text x="70" y="720" fill="rgba(255,255,255,0.65)" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial" font-size="18" font-weight="600">
+    Cover unavailable
+  </text>
+</svg>`;
+
+  return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
+}
+
+function BookCoverImage({
+  title,
+  author,
+  src,
+  className,
+}: {
+  title: string;
+  author?: string;
+  src?: string;
+  className?: string;
+}) {
+  const fallback = useMemo(() => fallbackCoverDataUrl(title, author), [title, author]);
+  const [imgSrc, setImgSrc] = useState<string>(src || fallback);
+
+  useEffect(() => {
+    setImgSrc(src || fallback);
+  }, [src, fallback]);
+
+  return (
+    <img
+      src={imgSrc}
+      alt={`${title} cover`}
+      loading="lazy"
+      decoding="async"
+      referrerPolicy="no-referrer"
+      onError={() => setImgSrc(fallback)}
+      className={className}
+    />
+  );
+}
 
 interface Book {
   id: string;
@@ -277,18 +347,15 @@ export default function RefBook() {
                 {/* Book cover */}
                 <div>
                   <div
-                    className={`aspect-[3/4] rounded-lg overflow-hidden flex items-center justify-center ${selectedBook.cover} shadow-lg`}
-                    style={{
-                      backgroundImage: selectedBook.image ? `url('${selectedBook.image}')` : "none",
-                      backgroundSize: "cover",
-                      backgroundPosition: "center",
-                    }}
+                    className={`aspect-[3/4] rounded-lg overflow-hidden shadow-lg relative ${selectedBook.cover}`}
                   >
-                    {!selectedBook.image && (
-                      <div className="text-white/60 text-center px-4">
-                        <p className="text-sm font-bold">{selectedBook.title}</p>
-                      </div>
-                    )}
+                    <BookCoverImage
+                      title={selectedBook.title}
+                      author={selectedBook.author}
+                      src={selectedBook.image}
+                      className="absolute inset-0 h-full w-full object-cover"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
                   </div>
                 </div>
 
@@ -481,23 +548,16 @@ export default function RefBook() {
                 className="bg-white dark:bg-slate-800 rounded-xl overflow-hidden hover:shadow-xl transition group"
               >
                 {/* Book Cover */}
-                <div
-                  className="aspect-[3/4] flex items-center justify-center relative overflow-hidden group-hover:scale-105 transition bg-cover bg-center"
-                  style={{
-                    backgroundImage: book.image ? `url('${book.image}')` : "none",
-                  }}
-                >
-                  {!book.image ? (
-                    <div className={`w-full h-full ${book.cover} flex items-center justify-center`}>
-                      <div className="text-white opacity-40 text-center px-4">
-                        <p className="text-xs font-bold">{book.title}</p>
-                      </div>
-                    </div>
-                  ) : (
-                    <div className="absolute inset-0 bg-black/30 flex items-end p-4">
-                      <p className="text-white text-xs font-bold line-clamp-2">{book.title}</p>
-                    </div>
-                  )}
+                <div className="aspect-[3/4] relative overflow-hidden transition group-hover:scale-105">
+                  <BookCoverImage
+                    title={book.title}
+                    author={book.author}
+                    src={book.image}
+                    className="absolute inset-0 h-full w-full object-cover"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent flex items-end p-4">
+                    <p className="text-white text-xs font-bold line-clamp-2">{book.title}</p>
+                  </div>
                 </div>
 
                 {/* Book Info */}

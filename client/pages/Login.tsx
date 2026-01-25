@@ -26,9 +26,21 @@ export default function Login() {
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
       // Store user data in localStorage
+      let displayName: string | undefined;
+      try {
+        const existingRaw = localStorage.getItem("user");
+        const existing = existingRaw ? (JSON.parse(existingRaw) as { email?: string; displayName?: string; name?: string }) : null;
+        if (existing?.email === email) {
+          displayName = existing.displayName || existing.name;
+        }
+      } catch {
+        displayName = undefined;
+      }
+
       localStorage.setItem(
         "user",
         JSON.stringify({
+          ...(displayName ? { displayName } : {}),
           email,
           role: "student",
           lastLogin: new Date().toISOString(),
@@ -50,10 +62,12 @@ export default function Login() {
       // Simulate Google OAuth
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
+      const googleEmail = `user${Math.random().toString(36).substr(2, 9)}@gmail.com`;
       localStorage.setItem(
         "user",
         JSON.stringify({
-          email: `user${Math.random().toString(36).substr(2, 9)}@gmail.com`,
+          displayName: "Google User",
+          email: googleEmail,
           role: "student",
           authProvider: "google",
           lastLogin: new Date().toISOString(),
