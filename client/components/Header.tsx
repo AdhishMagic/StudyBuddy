@@ -63,13 +63,14 @@ export default function Header({ isLoggedIn = false, showNav = true }: HeaderPro
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo - Left Side */}
-          <Link to="/" className="flex items-center gap-3 flex-shrink-0 relative z-50">
-            <div className="w-10 h-10 bg-[#7a4bf4] rounded-full flex items-center justify-center text-sm font-bold text-white">
-              SB
-            </div>
+          <Link to="/" className="flex items-center gap-3 flex-shrink-0 relative z-50 hover:opacity-80 transition-opacity">
+            <img 
+              src="/logo-small.ico" 
+              alt="StudyBuddy Logo" 
+              className="w-10 h-10 object-contain"
+            />
             <div className="text-xl font-bold">
-              <span className="text-slate-900 dark:text-white">Study</span>
-              <span className="text-[#7a4bf4]">Buddy</span>
+              <span className="text-slate-900 dark:text-white">StudyBuddy</span>
             </div>
           </Link>
 

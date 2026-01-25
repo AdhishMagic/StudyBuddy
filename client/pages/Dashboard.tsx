@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import Header from "@/components/Header";
+import Header from "../components/Header";
 import { Plus, Trash2, Edit2, ChevronLeft, ChevronRight } from "lucide-react";
 
 interface Task {
