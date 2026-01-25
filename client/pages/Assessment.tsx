@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Header from "@/components/Header";
 import { Plus, X, ChevronLeft, ChevronRight } from "lucide-react";
 
@@ -15,6 +15,7 @@ interface Assessment {
 
 export default function Assessment() {
   const [assessments, setAssessments] = useState<Assessment[]>([]);
+  const [assessmentsLoaded, setAssessmentsLoaded] = useState(false);
   const [showForm, setShowForm] = useState(false);
   const [selectedSubjects, setSelectedSubjects] = useState<string[]>([]);
   const [topic, setTopic] = useState("");
@@ -27,6 +28,30 @@ export default function Assessment() {
   const [selectedDate, setSelectedDate] = useState(new Date());
 
   const availableSubjects = ["Maths", "Science", "English", "History", "Geography"];
+
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem("assessments");
+      if (raw) {
+        const parsed = JSON.parse(raw) as Assessment[];
+        setAssessments(parsed);
+      }
+    } catch {
+      // ignore
+    } finally {
+      setAssessmentsLoaded(true);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!assessmentsLoaded) return;
+    try {
+      localStorage.setItem("assessments", JSON.stringify(assessments));
+      window.dispatchEvent(new Event("studybuddy:stats-updated"));
+    } catch {
+      // ignore
+    }
+  }, [assessments, assessmentsLoaded]);
 
   // Get week days around selected date
   const weekDays = useMemo(() => {

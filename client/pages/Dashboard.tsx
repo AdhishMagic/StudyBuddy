@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Header from "../components/Header";
 import { Plus, Trash2, Edit2, ChevronLeft, ChevronRight } from "lucide-react";
 
@@ -11,12 +11,13 @@ interface Task {
   endTime?: string;
   priority: "Low" | "Medium" | "High";
   progress: number;
+  completedOn?: string;
   category?: string;
   repeat?: "daily" | "weekly" | "none";
 }
 
 export default function Dashboard() {
-  const [tasks, setTasks] = useState<Task[]>([
+  const defaultTasks: Task[] = [
     {
       id: "1",
       title: "To prepare for the seminar",
@@ -65,11 +66,60 @@ export default function Dashboard() {
       progress: 80,
       category: "HOMEWORK",
     },
-  ]);
+  ];
+
+  const [tasks, setTasks] = useState<Task[]>(defaultTasks);
+  const [tasksLoaded, setTasksLoaded] = useState(false);
+
+  const toYmd = (d: Date) => {
+    const yyyy = d.getFullYear();
+    const mm = String(d.getMonth() + 1).padStart(2, "0");
+    const dd = String(d.getDate()).padStart(2, "0");
+    return `${yyyy}-${mm}-${dd}`;
+  };
+
+  const parseYmdToDate = (ymd: string) => new Date(`${ymd}T00:00:00`);
 
   const [newTaskTitle, setNewTaskTitle] = useState("");
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [showAddTask, setShowAddTask] = useState(false);
+
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem("tasks");
+      if (raw) {
+        const parsed = JSON.parse(raw) as Array<Omit<Task, "date"> & { date: string }>;
+        setTasks(
+          parsed.map((t) => ({
+            ...t,
+            date: t.date.includes("T") ? new Date(t.date) : parseYmdToDate(t.date),
+          }))
+        );
+      }
+    } catch {
+      // ignore
+    } finally {
+      setTasksLoaded(true);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!tasksLoaded) return;
+    try {
+      localStorage.setItem(
+        "tasks",
+        JSON.stringify(
+          tasks.map((t) => ({
+            ...t,
+            date: toYmd(t.date),
+          }))
+        )
+      );
+      window.dispatchEvent(new Event("studybuddy:stats-updated"));
+    } catch {
+      // ignore
+    }
+  }, [tasks, tasksLoaded]);
 
   // Get week days around selected date
   const weekDays = useMemo(() => {
@@ -132,9 +182,18 @@ export default function Dashboard() {
   };
 
   const handleUpdateProgress = (id: string, newProgress: number) => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const completedOn = toYmd(today);
     setTasks(
       tasks.map((task) =>
-        task.id === id ? { ...task, progress: newProgress } : task
+        task.id === id
+          ? {
+              ...task,
+              progress: newProgress,
+              completedOn: newProgress >= 100 ? completedOn : undefined,
+            }
+          : task
       )
     );
   };
