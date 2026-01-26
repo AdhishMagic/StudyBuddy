@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { useLocation } from "react-router-dom";
 import Header from "../components/Header";
 import { Plus, Trash2, Edit2, ChevronLeft, ChevronRight } from "lucide-react";
 
@@ -17,6 +18,7 @@ interface Task {
 }
 
 export default function Dashboard() {
+  const location = useLocation();
   const defaultTasks: Task[] = [
     {
       id: "1",
@@ -81,8 +83,22 @@ export default function Dashboard() {
   const parseYmdToDate = (ymd: string) => new Date(`${ymd}T00:00:00`);
 
   const [newTaskTitle, setNewTaskTitle] = useState("");
-  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [selectedDate, setSelectedDate] = useState(() => {
+    const ymd = new URLSearchParams(location.search).get("date");
+    if (ymd && /^\d{4}-\d{2}-\d{2}$/.test(ymd)) return parseYmdToDate(ymd);
+    return new Date();
+  });
   const [showAddTask, setShowAddTask] = useState(false);
+
+  useEffect(() => {
+    const ymd = new URLSearchParams(location.search).get("date");
+    if (!ymd || !/^\d{4}-\d{2}-\d{2}$/.test(ymd)) return;
+    const next = parseYmdToDate(ymd);
+    if (Number.isNaN(next.getTime())) return;
+    setSelectedDate(next);
+    // Intentionally only reacts to URL changes.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location.search]);
 
   useEffect(() => {
     try {

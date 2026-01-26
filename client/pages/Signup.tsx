@@ -222,14 +222,14 @@ export default function Signup() {
                 </div>
 
                 <div>
-                  <label className="mb-2 block text-sm font-medium text-slate-700">Confirm Password</label>
+                  <label className="mb-2 block text-sm font-medium text-slate-700 dark:text-slate-300">Confirm Password</label>
                   <div className="relative">
                     <input
                       type={showConfirmPassword ? "text" : "password"}
                       value={confirmPassword}
                       onChange={(e) => setConfirmPassword(e.target.value)}
                       placeholder="Confirm your password"
-                      className="w-full rounded-lg border border-slate-200 bg-slate-50 px-4 py-2 pr-12 text-slate-900 outline-none transition focus:border-[#7a4bf4] focus:bg-white focus:ring-2 focus:ring-[#7a4bf4]/30"
+                      className="w-full rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 px-4 py-2 pr-12 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 outline-none transition focus:border-[#7a4bf4] focus:bg-white dark:focus:bg-slate-700 focus:ring-2 focus:ring-[#7a4bf4]/30"
                     />
                     <button
                       type="button"
@@ -253,17 +253,17 @@ export default function Signup() {
 
               <div className="relative mb-6">
                 <div className="absolute inset-0 flex items-center">
-                  <div className="w-full border-t border-slate-200" />
+                  <div className="w-full border-t border-slate-200 dark:border-slate-700" />
                 </div>
                 <div className="relative flex justify-center text-sm">
-                  <span className="bg-white px-2 text-slate-500">Or</span>
+                  <span className="bg-white dark:bg-slate-900 px-2 text-slate-500 dark:text-slate-400">Or</span>
                 </div>
               </div>
 
               <button
                 onClick={handleGoogleSignup}
                 disabled={loading}
-                className="flex w-full items-center justify-center gap-2 rounded-lg border-2 border-slate-300 bg-white py-2 font-medium text-[#7a4bf4] transition hover:border-[#7a4bf4] hover:bg-[#fafbff] disabled:cursor-not-allowed disabled:opacity-60"
+                className="flex w-full items-center justify-center gap-2 rounded-lg border-2 border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 py-2 font-medium text-[#7a4bf4] transition hover:border-[#7a4bf4] hover:bg-[#fafbff] dark:hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-60"
               >
                 <svg className="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
                   <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4" />
@@ -274,7 +274,7 @@ export default function Signup() {
                 Continue with Google
               </button>
 
-              <p className="mt-6 text-center text-sm text-slate-600">
+              <p className="mt-6 text-center text-sm text-slate-600 dark:text-slate-400">
                 Already have an account?{" "}
                 <Link to="/login" className="font-semibold text-[#7a4bf4] hover:underline">
                   Log in

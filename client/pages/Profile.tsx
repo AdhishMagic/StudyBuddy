@@ -701,11 +701,11 @@ export default function Profile() {
           </div>
 
           {/* Right 70%: percentages + streak */}
-          <div className="md:col-span-7">
+          <div className="md:col-span-7 min-w-0">
             <div className="grid gap-4 sm:gap-6">
               {/* Percent cards */}
-              <div className="grid gap-6 sm:grid-cols-2">
-                <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-xl p-4 sm:p-6">
+              <div className="grid gap-6 sm:grid-cols-2 items-stretch">
+                <div className="h-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-xl p-4 sm:p-6">
                   <div className="flex items-center justify-between">
                     <div className="text-sm font-semibold text-slate-700 dark:text-slate-300">To-do score</div>
                     <div className="text-xs text-slate-500 dark:text-slate-400">
@@ -723,7 +723,7 @@ export default function Profile() {
                   </div>
                 </div>
 
-                <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-xl p-4 sm:p-6">
+                <div className="h-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-xl p-4 sm:p-6">
                   <div className="flex items-center justify-between">
                     <div className="text-sm font-semibold text-slate-700 dark:text-slate-300">Assessment</div>
                     <div className="text-xs text-slate-500 dark:text-slate-400">
@@ -743,7 +743,7 @@ export default function Profile() {
               </div>
 
               {/* Streak */}
-              <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-xl p-4 sm:p-6">
+              <div className="min-w-0 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-xl p-4 sm:p-6">
                 <div className="flex items-start justify-between gap-4">
                   <div>
                     <div className="text-sm font-semibold text-slate-700 dark:text-slate-300">Streak</div>
@@ -788,8 +788,8 @@ export default function Profile() {
                   </div>
                 </div>
 
-                <div className="mt-4 overflow-x-auto">
-                  <div className="w-fit min-w-[640px] md:min-w-[760px] md:mx-auto">
+                <div className="mt-4 max-w-full min-w-0 overflow-x-auto">
+                  <div className="w-max min-w-[520px] sm:min-w-[640px] lg:min-w-[760px] mx-auto">
                     {/* Month labels */}
                     <div className="relative h-4 mb-2">
                       {monthLabelPositions.map((m) => (
@@ -835,7 +835,7 @@ export default function Profile() {
                                 <div
                                   key={di}
                                   title={`${d.ymd}: ${d.count}`}
-                                  className={`h-3 w-3 rounded-sm ${d.future ? "opacity-20" : ""} ${d.outOfYear ? "opacity-0" : ""} ${bg}`}
+                                  className={`h-3 w-3 rounded-sm ${d.future ? "opacity-50" : ""} ${d.outOfYear ? "opacity-0" : ""} ${bg}`}
                                 />
                               );
                             })}

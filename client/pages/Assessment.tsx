@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { useLocation } from "react-router-dom";
 import Header from "@/components/Header";
 import { Plus, X, ChevronLeft, ChevronRight } from "lucide-react";
 
@@ -14,6 +15,7 @@ interface Assessment {
 }
 
 export default function Assessment() {
+  const location = useLocation();
   const [assessments, setAssessments] = useState<Assessment[]>([]);
   const [assessmentsLoaded, setAssessmentsLoaded] = useState(false);
   const [showForm, setShowForm] = useState(false);
@@ -25,7 +27,19 @@ export default function Assessment() {
   const [priority, setPriority] = useState<"Low" | "Medium" | "High">("Medium");
   const [newSubject, setNewSubject] = useState("");
   const [alert, setAlert] = useState(true);
-  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [selectedDate, setSelectedDate] = useState(() => {
+    const ymd = new URLSearchParams(location.search).get("date");
+    if (ymd && /^\d{4}-\d{2}-\d{2}$/.test(ymd)) return new Date(`${ymd}T00:00:00`);
+    return new Date();
+  });
+
+  useEffect(() => {
+    const ymd = new URLSearchParams(location.search).get("date");
+    if (!ymd || !/^\d{4}-\d{2}-\d{2}$/.test(ymd)) return;
+    const next = new Date(`${ymd}T00:00:00`);
+    if (Number.isNaN(next.getTime())) return;
+    setSelectedDate(next);
+  }, [location.search]);
 
   const availableSubjects = ["Maths", "Science", "English", "History", "Geography"];
 

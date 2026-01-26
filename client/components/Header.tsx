@@ -22,6 +22,7 @@ type NotificationItem = {
   kind: "task" | "assessment";
   title: string;
   when: Date;
+  dateYmd: string;
   subtitle: string;
   href: "/dashboard" | "/assessment";
 };
@@ -200,6 +201,7 @@ export default function Header({ isLoggedIn = false, showNav = true }: HeaderPro
         kind: "task",
         title: t.title || "To-do",
         when,
+        dateYmd: t.date,
         subtitle: isOverdue ? `Overdue • ${formatWhen(when)}` : `Due soon • ${formatWhen(when)}`,
         href: "/dashboard",
       });
@@ -216,6 +218,7 @@ export default function Header({ isLoggedIn = false, showNav = true }: HeaderPro
         kind: "assessment",
         title: a.topic || "Assessment",
         when,
+        dateYmd: a.date,
         subtitle: `Upcoming • ${formatWhen(when)}`,
         href: "/assessment",
       });
@@ -379,7 +382,9 @@ export default function Header({ isLoggedIn = false, showNav = true }: HeaderPro
                             type="button"
                             onClick={() => {
                               setNotificationsOpen(false);
-                              navigate(n.href);
+                              const ymd = n.dateYmd;
+                              const next = /^\d{4}-\d{2}-\d{2}$/.test(ymd) ? `${n.href}?date=${encodeURIComponent(ymd)}` : n.href;
+                              navigate(next);
                             }}
                             className="w-full text-left px-4 py-3 hover:bg-slate-50 dark:hover:bg-slate-900 transition flex items-start gap-3"
                           >
