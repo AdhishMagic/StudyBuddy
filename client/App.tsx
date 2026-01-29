@@ -9,6 +9,7 @@ import ELink from "./pages/ELink";
 import RefBook from "./pages/RefBook";
 import Profile from "./pages/Profile";
 import NotFound from "./pages/NotFound";
+import { apiGetMe, getAuthToken } from "./lib/api";
 
 // Protected route component
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
@@ -16,9 +17,42 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const loggedIn = localStorage.getItem("isLoggedIn") === "true";
-    setIsLoggedIn(loggedIn);
-    setLoading(false);
+    const init = async () => {
+      const token = getAuthToken();
+      if (!token) {
+        setIsLoggedIn(localStorage.getItem("isLoggedIn") === "true");
+        setLoading(false);
+        return;
+      }
+
+      try {
+        const me = await apiGetMe();
+        localStorage.setItem(
+          "user",
+          JSON.stringify({
+            ...me,
+            displayName: me.name,
+            authProvider: "google",
+            lastLogin: new Date().toISOString(),
+          })
+        );
+        localStorage.setItem("isLoggedIn", "true");
+        setIsLoggedIn(true);
+      } catch {
+        try {
+          localStorage.removeItem("authToken");
+          localStorage.removeItem("isLoggedIn");
+          localStorage.removeItem("user");
+        } catch {
+          // ignore
+        }
+        setIsLoggedIn(false);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    init();
   }, []);
 
   if (loading) {

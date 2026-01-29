@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import Header from "../components/Header";
 import { Pencil } from "lucide-react";
+import { apiGetMe, apiGetUserData, apiPutUserData, getAuthToken } from "@/lib/api";
 
 type StoredUser = {
   displayName?: string;
@@ -102,66 +103,104 @@ export default function Profile() {
   };
 
   useEffect(() => {
-    try {
-      const raw = localStorage.getItem("user");
-      const parsed = raw ? (JSON.parse(raw) as StoredUser) : null;
-      const nextName = parsed?.displayName || parsed?.name || "Student";
-      const nextEmail = parsed?.email || "";
-      setName(nextName);
-      setEmail(nextEmail);
+    const load = async () => {
+      const token = getAuthToken();
 
-      const savedAvatar = localStorage.getItem("userAvatar");
-      setAvatarDataUrl(savedAvatar || "");
+      if (token) {
+        try {
+          const me = await apiGetMe();
+          const nextName = me.name || "Student";
+          const nextEmail = me.email || "";
+          setName(nextName);
+          setEmail(nextEmail);
 
-      const savedBooks = localStorage.getItem("interestedBooks");
-      if (savedBooks) {
-        const parsedBooks = JSON.parse(savedBooks) as InterestedBook[];
-        if (Array.isArray(parsedBooks)) setInterestedBooks(parsedBooks);
+          try {
+            const avatar = await apiGetUserData<string>("userAvatar");
+            setAvatarDataUrl(typeof avatar === "string" ? avatar : "");
+          } catch {
+            setAvatarDataUrl("");
+          }
+
+          try {
+            const books = await apiGetUserData<InterestedBook[]>("interestedBooks");
+            if (Array.isArray(books)) setInterestedBooks(books);
+          } catch {
+            setInterestedBooks([]);
+          }
+
+          let remoteProfile: StoredUserProfile | null = null;
+          try {
+            remoteProfile = await apiGetUserData<StoredUserProfile>("userProfile");
+          } catch {
+            remoteProfile = null;
+          }
+
+          const nextProfile: StoredUserProfile = {
+            fullName: remoteProfile?.fullName || nextName || "",
+            age: remoteProfile?.age || "",
+            gender: remoteProfile?.gender || "",
+            username: remoteProfile?.username || "",
+            mobile: remoteProfile?.mobile || "",
+            bio: remoteProfile?.bio || "",
+          };
+
+          setProfile(nextProfile);
+          setDraft(nextProfile);
+          return;
+        } catch {
+          // fall back to local
+        }
       }
 
-      const profileRaw = localStorage.getItem("userProfile");
-      const parsedProfile = profileRaw
-        ? (JSON.parse(profileRaw) as StoredUserProfile)
-        : null;
+      try {
+        const raw = localStorage.getItem("user");
+        const parsed = raw ? (JSON.parse(raw) as StoredUser) : null;
+        const nextName = parsed?.displayName || parsed?.name || "Student";
+        const nextEmail = parsed?.email || "";
+        setName(nextName);
+        setEmail(nextEmail);
 
-      setProfile({
-        fullName: parsedProfile?.fullName || nextName || "",
-        age: parsedProfile?.age || "",
-        gender: parsedProfile?.gender || "",
-        username: parsedProfile?.username || "",
-        mobile: parsedProfile?.mobile || "",
-        bio: parsedProfile?.bio || "",
-      });
-      setDraft({
-        fullName: parsedProfile?.fullName || nextName || "",
-        age: parsedProfile?.age || "",
-        gender: parsedProfile?.gender || "",
-        username: parsedProfile?.username || "",
-        mobile: parsedProfile?.mobile || "",
-        bio: parsedProfile?.bio || "",
-      });
-    } catch {
-      setName("Student");
-      setEmail("");
-      setAvatarDataUrl("");
-      setInterestedBooks([]);
-      setProfile({
-        fullName: "",
-        age: "",
-        gender: "",
-        username: "",
-        mobile: "",
-        bio: "",
-      });
-      setDraft({
-        fullName: "",
-        age: "",
-        gender: "",
-        username: "",
-        mobile: "",
-        bio: "",
-      });
-    }
+        const savedAvatar = localStorage.getItem("userAvatar");
+        setAvatarDataUrl(savedAvatar || "");
+
+        const savedBooks = localStorage.getItem("interestedBooks");
+        if (savedBooks) {
+          const parsedBooks = JSON.parse(savedBooks) as InterestedBook[];
+          if (Array.isArray(parsedBooks)) setInterestedBooks(parsedBooks);
+        }
+
+        const profileRaw = localStorage.getItem("userProfile");
+        const parsedProfile = profileRaw ? (JSON.parse(profileRaw) as StoredUserProfile) : null;
+
+        const nextProfile: StoredUserProfile = {
+          fullName: parsedProfile?.fullName || nextName || "",
+          age: parsedProfile?.age || "",
+          gender: parsedProfile?.gender || "",
+          username: parsedProfile?.username || "",
+          mobile: parsedProfile?.mobile || "",
+          bio: parsedProfile?.bio || "",
+        };
+        setProfile(nextProfile);
+        setDraft(nextProfile);
+      } catch {
+        setName("Student");
+        setEmail("");
+        setAvatarDataUrl("");
+        setInterestedBooks([]);
+        const empty: StoredUserProfile = {
+          fullName: "",
+          age: "",
+          gender: "",
+          username: "",
+          mobile: "",
+          bio: "",
+        };
+        setProfile(empty);
+        setDraft(empty);
+      }
+    };
+
+    load();
   }, []);
 
   useEffect(() => {
@@ -170,6 +209,12 @@ export default function Profile() {
     } catch {
       // ignore
     }
+
+    const token = getAuthToken();
+    if (!token) return;
+    apiPutUserData("interestedBooks", interestedBooks).catch(() => {
+      // ignore
+    });
   }, [interestedBooks]);
 
   const handleAddBook = () => {
@@ -201,6 +246,13 @@ export default function Profile() {
         localStorage.setItem("userAvatar", next);
       } catch {
         // ignore
+      }
+
+      const token = getAuthToken();
+      if (token) {
+        apiPutUserData("userAvatar", next).catch(() => {
+          // ignore
+        });
       }
     };
     reader.readAsDataURL(file);

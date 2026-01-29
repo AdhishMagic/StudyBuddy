@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useLocation } from "react-router-dom";
 import Header from "../components/Header";
 import { Plus, Trash2, Edit2, ChevronLeft, ChevronRight } from "lucide-react";
+import { apiGetUserData, apiPutUserData, getAuthToken } from "@/lib/api";
 
 interface Task {
   id: string;
@@ -101,22 +102,45 @@ export default function Dashboard() {
   }, [location.search]);
 
   useEffect(() => {
-    try {
-      const raw = localStorage.getItem("tasks");
-      if (raw) {
-        const parsed = JSON.parse(raw) as Array<Omit<Task, "date"> & { date: string }>;
-        setTasks(
-          parsed.map((t) => ({
-            ...t,
-            date: t.date.includes("T") ? new Date(t.date) : parseYmdToDate(t.date),
-          }))
-        );
+    const load = async () => {
+      const token = getAuthToken();
+      if (token) {
+        try {
+          const remote = await apiGetUserData<Array<Omit<Task, "date"> & { date: string }>>("tasks");
+          if (Array.isArray(remote)) {
+            setTasks(
+              remote.map((t) => ({
+                ...t,
+                date: t.date.includes("T") ? new Date(t.date) : parseYmdToDate(t.date),
+              }))
+            );
+            setTasksLoaded(true);
+            return;
+          }
+        } catch {
+          // fall back to local
+        }
       }
-    } catch {
-      // ignore
-    } finally {
-      setTasksLoaded(true);
-    }
+
+      try {
+        const raw = localStorage.getItem("tasks");
+        if (raw) {
+          const parsed = JSON.parse(raw) as Array<Omit<Task, "date"> & { date: string }>;
+          setTasks(
+            parsed.map((t) => ({
+              ...t,
+              date: t.date.includes("T") ? new Date(t.date) : parseYmdToDate(t.date),
+            }))
+          );
+        }
+      } catch {
+        // ignore
+      } finally {
+        setTasksLoaded(true);
+      }
+    };
+
+    load();
   }, []);
 
   useEffect(() => {
@@ -135,6 +159,18 @@ export default function Dashboard() {
     } catch {
       // ignore
     }
+
+    const token = getAuthToken();
+    if (!token) return;
+    apiPutUserData(
+      "tasks",
+      tasks.map((t) => ({
+        ...t,
+        date: toYmd(t.date),
+      }))
+    ).catch(() => {
+      // ignore
+    });
   }, [tasks, tasksLoaded]);
 
   // Get week days around selected date

@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useLocation } from "react-router-dom";
 import Header from "@/components/Header";
 import { Plus, X, ChevronLeft, ChevronRight } from "lucide-react";
+import { apiGetUserData, apiPutUserData, getAuthToken } from "@/lib/api";
 
 interface Assessment {
   id: string;
@@ -44,17 +45,35 @@ export default function Assessment() {
   const availableSubjects = ["Maths", "Science", "English", "History", "Geography"];
 
   useEffect(() => {
-    try {
-      const raw = localStorage.getItem("assessments");
-      if (raw) {
-        const parsed = JSON.parse(raw) as Assessment[];
-        setAssessments(parsed);
+    const load = async () => {
+      const token = getAuthToken();
+      if (token) {
+        try {
+          const remote = await apiGetUserData<Assessment[]>("assessments");
+          if (Array.isArray(remote)) {
+            setAssessments(remote);
+            setAssessmentsLoaded(true);
+            return;
+          }
+        } catch {
+          // fall back
+        }
       }
-    } catch {
-      // ignore
-    } finally {
-      setAssessmentsLoaded(true);
-    }
+
+      try {
+        const raw = localStorage.getItem("assessments");
+        if (raw) {
+          const parsed = JSON.parse(raw) as Assessment[];
+          setAssessments(parsed);
+        }
+      } catch {
+        // ignore
+      } finally {
+        setAssessmentsLoaded(true);
+      }
+    };
+
+    load();
   }, []);
 
   useEffect(() => {
@@ -65,6 +84,12 @@ export default function Assessment() {
     } catch {
       // ignore
     }
+
+    const token = getAuthToken();
+    if (!token) return;
+    apiPutUserData("assessments", assessments).catch(() => {
+      // ignore
+    });
   }, [assessments, assessmentsLoaded]);
 
   // Get week days around selected date

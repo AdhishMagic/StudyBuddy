@@ -1,7 +1,31 @@
-import { useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Header from "@/components/Header";
 import { Eye, EyeOff } from "lucide-react";
+import { apiSignupEmail } from "@/lib/api";
+
+declare global {
+  interface Window {
+    google?: {
+      accounts: {
+        id: {
+          initialize: (options: {
+            client_id: string;
+            callback: (response: { credential: string }) => void;
+            auto_select?: boolean;
+            cancel_on_tap_outside?: boolean;
+            itp_support?: boolean;
+            use_fedcm_for_prompt?: boolean;
+          }) => void;
+          renderButton: (parent: HTMLElement, options: Record<string, unknown>) => void;
+          prompt: (momentListener?: (notification: any) => void) => void;
+          disableAutoSelect: () => void;
+        };
+      };
+    };
+  }
+}
+// (imports moved above to keep declare global near top)
 
 export default function Signup() {
   const [fullName, setFullName] = useState("");
@@ -12,7 +36,19 @@ export default function Signup() {
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [resolvedGoogleClientId, setResolvedGoogleClientId] = useState("");
+  const googleButtonRef = useRef<HTMLDivElement | null>(null);
   const navigate = useNavigate();
+
+  const apiBaseUrl = useMemo(() => {
+    const fromEnv = (import.meta as any).env?.VITE_API_BASE_URL as string | undefined;
+    return fromEnv?.trim() ? fromEnv.trim() : "http://127.0.0.1:8000";
+  }, []);
+  const [resolvedApiBaseUrl, setResolvedApiBaseUrl] = useState(apiBaseUrl);
+  const googleClientId = useMemo(() => {
+    const fromEnv = (import.meta as any).env?.VITE_GOOGLE_CLIENT_ID as string | undefined;
+    return fromEnv?.trim() ? fromEnv.trim() : "";
+  }, []);
 
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -35,55 +71,167 @@ export default function Signup() {
 
     setLoading(true);
     try {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      
-      // Store user data in localStorage
+      const resp = await apiSignupEmail({ name: fullName || undefined, email, password });
+      localStorage.setItem("authToken", resp.access_token);
       localStorage.setItem(
         "user",
         JSON.stringify({
-          displayName: fullName,
-          email,
+          ...resp.user,
+          displayName: resp.user.name ?? (fullName ? fullName : undefined),
           role: "student",
+          authProvider: "password",
           createdAt: new Date().toISOString(),
         })
       );
       localStorage.setItem("isLoggedIn", "true");
-
       navigate("/dashboard");
     } catch (err) {
-      setError("Signup failed. Please try again.");
+      setError("Signup failed. Account may already exist.");
     } finally {
       setLoading(false);
     }
   };
 
-  const handleGoogleSignup = async () => {
-    setLoading(true);
-    try {
-      // Simulate Google OAuth
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
-      const googleEmail = `user${Math.random().toString(36).substr(2, 9)}@gmail.com`;
-      localStorage.setItem(
-        "user",
-        JSON.stringify({
-          displayName: "Google User",
-          email: googleEmail,
-          role: "student",
-          authProvider: "google",
-          createdAt: new Date().toISOString(),
-        })
-      );
-      localStorage.setItem("isLoggedIn", "true");
-
-      navigate("/dashboard");
-    } catch (err) {
-      setError("Google signup failed. Please try again.");
-    } finally {
-      setLoading(false);
+  // Resolve Google client ID (env or server) and render GIS button
+  useEffect(() => {
+    if (googleClientId) {
+      setResolvedGoogleClientId(googleClientId);
+      return;
     }
-  };
+
+    let cancelled = false;
+    const loadFromServer = async () => {
+      try {
+        const variants = new Set<string>();
+        const add = (u: string) => variants.add(u);
+        add(apiBaseUrl);
+        if (apiBaseUrl.includes("127.0.0.1")) add(apiBaseUrl.replace("127.0.0.1", "localhost"));
+        if (apiBaseUrl.includes("localhost")) add(apiBaseUrl.replace("localhost", "127.0.0.1"));
+        const ports = ["8000", "8001", "8005"];
+        for (const p of ports) {
+          const replaced = apiBaseUrl.replace(/:\d+$/, `:${p}`);
+          add(replaced);
+          if (replaced.includes("127.0.0.1")) add(replaced.replace("127.0.0.1", "localhost"));
+          if (replaced.includes("localhost")) add(replaced.replace("localhost", "127.0.0.1"));
+        }
+
+        for (const base of variants) {
+          try {
+            const res = await fetch(`${base}/api/v1/auth/google/client-id`);
+            if (!res.ok) continue;
+            const data = (await res.json()) as { client_id?: string };
+            const cid = (data.client_id || "").trim();
+            if (!cid) continue;
+            if (!cancelled) {
+              setResolvedApiBaseUrl(base);
+              setResolvedGoogleClientId(cid);
+            }
+            return;
+          } catch {}
+        }
+      } catch {
+        // ignore
+      }
+    };
+
+    loadFromServer();
+    return () => {
+      cancelled = true;
+    };
+  }, [apiBaseUrl, googleClientId]);
+
+  useEffect(() => {
+    if (!resolvedGoogleClientId) return;
+
+    const scriptId = "google-gsi";
+    const ensureScript = () =>
+      new Promise<void>((resolve, reject) => {
+        if (document.getElementById(scriptId)) {
+          resolve();
+          return;
+        }
+        const script = document.createElement("script");
+        script.id = scriptId;
+        script.src = "https://accounts.google.com/gsi/client";
+        script.async = true;
+        script.defer = true;
+        script.onload = () => resolve();
+        script.onerror = () => reject(new Error("Failed to load Google script"));
+        document.head.appendChild(script);
+      });
+
+    const init = async () => {
+      try {
+        await ensureScript();
+        if (!window.google?.accounts?.id || !googleButtonRef.current) return;
+
+        try {
+          window.google.accounts.id.disableAutoSelect();
+        } catch {}
+
+        window.google.accounts.id.initialize({
+          client_id: resolvedGoogleClientId,
+          auto_select: false,
+          cancel_on_tap_outside: false,
+          itp_support: true,
+          use_fedcm_for_prompt: true,
+          callback: async (response) => {
+            setError("");
+            setLoading(true);
+            try {
+              const res = await fetch(`${resolvedApiBaseUrl}/api/v1/auth/google`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ credential: response.credential }),
+              });
+              if (!res.ok) {
+                const msg = await res.text();
+                throw new Error(msg || "Google signup failed");
+              }
+              const data = (await res.json()) as {
+                access_token: string;
+                token_type: string;
+                user: { id: number; email?: string | null; name?: string | null; picture?: string | null };
+              };
+
+              localStorage.setItem("authToken", data.access_token);
+              localStorage.setItem(
+                "user",
+                JSON.stringify({
+                  ...data.user,
+                  // Prefer Google profile name, else provided full name, else undefined
+                  displayName: data.user.name ?? (fullName || undefined),
+                  role: "student",
+                  authProvider: "google",
+                  createdAt: new Date().toISOString(),
+                })
+              );
+              localStorage.setItem("isLoggedIn", "true");
+              navigate("/dashboard");
+            } catch (e) {
+              const msg = e instanceof Error ? e.message : "Google signup failed. Please try again.";
+              setError(msg);
+            } finally {
+              setLoading(false);
+            }
+          },
+        });
+
+        googleButtonRef.current.innerHTML = "";
+        window.google.accounts.id.renderButton(googleButtonRef.current, {
+          theme: "outline",
+          size: "large",
+          text: "continue_with",
+          shape: "pill",
+          width: 360,
+        });
+      } catch {
+        setError("Google signup is unavailable right now.");
+      }
+    };
+
+    init();
+  }, [resolvedApiBaseUrl, resolvedGoogleClientId, navigate, fullName]);
 
   return (
     <div className="min-h-screen bg-[#f4f6ff] dark:bg-slate-950 text-slate-900 dark:text-white transition-colors">
@@ -260,19 +408,29 @@ export default function Signup() {
                 </div>
               </div>
 
-              <button
-                onClick={handleGoogleSignup}
-                disabled={loading}
-                className="flex w-full items-center justify-center gap-2 rounded-lg border-2 border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 py-2 font-medium text-[#7a4bf4] transition hover:border-[#7a4bf4] hover:bg-[#fafbff] dark:hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-60"
-              >
-                <svg className="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4" />
-                  <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853" />
-                  <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05" />
-                  <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335" />
-                </svg>
-                Continue with Google
-              </button>
+              {!resolvedGoogleClientId ? (
+                <button
+                  disabled
+                  className="flex w-full items-center justify-center gap-2 rounded-lg border-2 border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 py-2 font-medium text-[#7a4bf4]"
+                >
+                  <svg className="h-5 w-5" viewBox="0 0 24 24" aria-hidden>
+                    <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4" />
+                    <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853" />
+                    <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05" />
+                    <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335" />
+                  </svg>
+                  Continue with Google
+                </button>
+              ) : (
+                <div
+                  className={
+                    "flex w-full items-center justify-center rounded-lg border-2 border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 py-2 transition " +
+                    (loading ? "opacity-60 pointer-events-none" : "")
+                  }
+                >
+                  <div ref={googleButtonRef} />
+                </div>
+              )}
 
               <p className="mt-6 text-center text-sm text-slate-600 dark:text-slate-400">
                 Already have an account?{" "}

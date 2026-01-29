@@ -1,7 +1,30 @@
-import { useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Header from "@/components/Header";
 import { Eye, EyeOff } from "lucide-react";
+import { apiLoginEmail } from "@/lib/api";
+
+declare global {
+  interface Window {
+    google?: {
+      accounts: {
+        id: {
+          initialize: (options: {
+            client_id: string;
+            callback: (response: { credential: string }) => void;
+            auto_select?: boolean;
+            cancel_on_tap_outside?: boolean;
+            itp_support?: boolean;
+            use_fedcm_for_prompt?: boolean;
+          }) => void;
+          renderButton: (parent: HTMLElement, options: Record<string, unknown>) => void;
+          prompt: (momentListener?: (notification: any) => void) => void;
+          disableAutoSelect: () => void;
+        };
+      };
+    };
+  }
+}
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -9,7 +32,72 @@ export default function Login() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [resolvedGoogleClientId, setResolvedGoogleClientId] = useState("");
   const navigate = useNavigate();
+
+  const googleButtonRef = useRef<HTMLDivElement | null>(null);
+
+  const apiBaseUrl = useMemo(() => {
+    const fromEnv = (import.meta as any).env?.VITE_API_BASE_URL as string | undefined;
+    return fromEnv?.trim() ? fromEnv.trim() : "http://127.0.0.1:8000";
+  }, []);
+
+  const [resolvedApiBaseUrl, setResolvedApiBaseUrl] = useState(apiBaseUrl);
+
+  const googleClientId = useMemo(() => {
+    const fromEnv = (import.meta as any).env?.VITE_GOOGLE_CLIENT_ID as string | undefined;
+    return fromEnv?.trim() ? fromEnv.trim() : "";
+  }, []);
+
+  useEffect(() => {
+    if (googleClientId) {
+      setResolvedGoogleClientId(googleClientId);
+      return;
+    }
+
+    let cancelled = false;
+
+    const loadFromServer = async () => {
+      try {
+        const variants = new Set<string>();
+        const add = (u: string) => variants.add(u);
+        add(apiBaseUrl);
+        // Host variants
+        if (apiBaseUrl.includes("127.0.0.1")) add(apiBaseUrl.replace("127.0.0.1", "localhost"));
+        if (apiBaseUrl.includes("localhost")) add(apiBaseUrl.replace("localhost", "127.0.0.1"));
+        // Port variants commonly used in dev
+        const ports = ["8000", "8001", "8005"];
+        for (const p of ports) {
+          const replaced = apiBaseUrl.replace(/:\d+$/, `:${p}`);
+          add(replaced);
+          if (replaced.includes("127.0.0.1")) add(replaced.replace("127.0.0.1", "localhost"));
+          if (replaced.includes("localhost")) add(replaced.replace("localhost", "127.0.0.1"));
+        }
+
+        for (const base of variants) {
+          try {
+            const res = await fetch(`${base}/api/v1/auth/google/client-id`);
+            if (!res.ok) continue;
+            const data = (await res.json()) as { client_id?: string };
+            const cid = (data.client_id || "").trim();
+            if (!cid) continue;
+            if (!cancelled) {
+              setResolvedApiBaseUrl(base);
+              setResolvedGoogleClientId(cid);
+            }
+            return;
+          } catch {}
+        }
+      } catch {
+        // ignore: Google login will simply be unavailable
+      }
+    };
+
+    loadFromServer();
+    return () => {
+      cancelled = true;
+    };
+  }, [apiBaseUrl, googleClientId]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -22,64 +110,161 @@ export default function Login() {
 
     setLoading(true);
     try {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
-      // Store user data in localStorage
-      let displayName: string | undefined;
-      try {
-        const existingRaw = localStorage.getItem("user");
-        const existing = existingRaw ? (JSON.parse(existingRaw) as { email?: string; displayName?: string; name?: string }) : null;
-        if (existing?.email === email) {
-          displayName = existing.displayName || existing.name;
-        }
-      } catch {
-        displayName = undefined;
-      }
-
+      const resp = await apiLoginEmail({ email, password });
+      localStorage.setItem("authToken", resp.access_token);
       localStorage.setItem(
         "user",
         JSON.stringify({
-          ...(displayName ? { displayName } : {}),
-          email,
+          ...resp.user,
+          displayName: resp.user.name ?? undefined,
           role: "student",
+          authProvider: "password",
           lastLogin: new Date().toISOString(),
         })
       );
       localStorage.setItem("isLoggedIn", "true");
-
       navigate("/dashboard");
     } catch (err) {
-      setError("Login failed. Please try again.");
+      setError("Invalid email or password");
     } finally {
       setLoading(false);
     }
   };
 
-  const handleGoogleLogin = async () => {
-    setLoading(true);
+  useEffect(() => {
+    if (!resolvedGoogleClientId) return;
+
+    const scriptId = "google-gsi";
+
+    const ensureScript = () =>
+      new Promise<void>((resolve, reject) => {
+        if (document.getElementById(scriptId)) {
+          resolve();
+          return;
+        }
+
+        const script = document.createElement("script");
+        script.id = scriptId;
+        script.src = "https://accounts.google.com/gsi/client";
+        script.async = true;
+        script.defer = true;
+        script.onload = () => resolve();
+        script.onerror = () => reject(new Error("Failed to load Google script"));
+        document.head.appendChild(script);
+      });
+
+    const init = async () => {
+      try {
+        await ensureScript();
+        if (!window.google?.accounts?.id || !googleButtonRef.current) return;
+
+        // Force account chooser instead of silent auto-select.
+        try {
+          window.google.accounts.id.disableAutoSelect();
+        } catch {
+          // ignore
+        }
+
+        window.google.accounts.id.initialize({
+          client_id: resolvedGoogleClientId,
+          auto_select: false,
+          cancel_on_tap_outside: false,
+          itp_support: true,
+          use_fedcm_for_prompt: true,
+          callback: async (response) => {
+            setError("");
+            setLoading(true);
+            try {
+              const res = await fetch(`${resolvedApiBaseUrl}/api/v1/auth/google`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ credential: response.credential }),
+              });
+
+              if (!res.ok) {
+                const msg = await res.text();
+                throw new Error(msg || "Google login failed");
+              }
+
+              const data = (await res.json()) as {
+                access_token: string;
+                token_type: string;
+                user: {
+                  id: number;
+                  email?: string | null;
+                  name?: string | null;
+                  picture?: string | null;
+                };
+              };
+
+              localStorage.setItem("authToken", data.access_token);
+              localStorage.setItem(
+                "user",
+                JSON.stringify({
+                  ...data.user,
+                  displayName: data.user.name,
+                  role: "student",
+                  authProvider: "google",
+                  lastLogin: new Date().toISOString(),
+                })
+              );
+              localStorage.setItem("isLoggedIn", "true");
+              navigate("/dashboard");
+            } catch (e) {
+              const msg = e instanceof Error ? e.message : "Google login failed. Please try again.";
+              setError(msg);
+            } finally {
+              setLoading(false);
+            }
+          },
+        });
+
+        googleButtonRef.current.innerHTML = "";
+        window.google.accounts.id.renderButton(googleButtonRef.current, {
+          theme: "outline",
+          size: "large",
+          text: "continue_with",
+          shape: "pill",
+          width: 360,
+        });
+      } catch {
+        setError("Google login is unavailable right now.");
+      }
+    };
+
+    init();
+  }, [resolvedApiBaseUrl, resolvedGoogleClientId, navigate]);
+
+  const forceGoogleAccountChooser = async () => {
+    setError("");
+    if (!resolvedGoogleClientId) {
+      setError("Google client id is not configured.");
+      return;
+    }
+    if (!window.google?.accounts?.id) {
+      setError("Google login is not ready yet. Please try again.");
+      return;
+    }
+
     try {
-      // Simulate Google OAuth
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
-      const googleEmail = `user${Math.random().toString(36).substr(2, 9)}@gmail.com`;
-      localStorage.setItem(
-        "user",
-        JSON.stringify({
-          displayName: "Google User",
-          email: googleEmail,
-          role: "student",
-          authProvider: "google",
-          lastLogin: new Date().toISOString(),
-        })
-      );
-      localStorage.setItem("isLoggedIn", "true");
-
-      navigate("/dashboard");
-    } catch (err) {
-      setError("Google login failed. Please try again.");
-    } finally {
-      setLoading(false);
+      window.google.accounts.id.prompt((notification: any) => {
+        // Show helpful errors when Google can't display the chooser.
+        if (notification?.isNotDisplayed?.()) {
+          const reason = notification?.getNotDisplayedReason?.();
+          setError(
+            reason
+              ? `Google sign-in not displayed: ${reason}. Check your Google OAuth 'Authorized JavaScript origins'.`
+              : "Google sign-in not displayed."
+          );
+        } else if (notification?.isSkippedMoment?.()) {
+          const reason = notification?.getSkippedReason?.();
+          if (reason) setError(`Google sign-in skipped: ${reason}.`);
+        } else if (notification?.isDismissedMoment?.()) {
+          // user closed it
+        }
+      });
+    } catch {
+      setError("Could not open Google account chooser.");
     }
   };
 
@@ -237,19 +422,40 @@ export default function Login() {
                 </div>
               </div>
 
-              <button
-                onClick={handleGoogleLogin}
-                disabled={loading}
-                className="flex w-full items-center justify-center gap-2 rounded-lg border-2 border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 py-2 font-medium text-[#7a4bf4] transition hover:border-[#7a4bf4] hover:bg-[#fafbff] dark:hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-60"
-              >
-                <svg className="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4" />
-                  <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853" />
-                  <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05" />
-                  <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335" />
-                </svg>
-                Continue with Google
-              </button>
+              {!resolvedGoogleClientId ? (
+                <button
+                  disabled
+                  className="flex w-full items-center justify-center gap-2 rounded-lg border-2 border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 py-2 font-medium text-slate-500"
+                >
+                  <svg className="h-5 w-5" viewBox="0 0 24 24" aria-hidden>
+                    <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4" />
+                    <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853" />
+                    <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05" />
+                    <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335" />
+                  </svg>
+                  Continue with Google
+                </button>
+              ) : (
+                <div className="space-y-3">
+                  <div
+                    className={
+                      "flex w-full items-center justify-center rounded-lg border-2 border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 py-2 transition " +
+                      (loading ? "opacity-60 pointer-events-none" : "")
+                    }
+                  >
+                    <div ref={googleButtonRef} />
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={forceGoogleAccountChooser}
+                    disabled={loading}
+                    className="w-full rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 py-2 text-sm font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700 disabled:cursor-not-allowed disabled:opacity-60"
+                  >
+                    Show Google accounts
+                  </button>
+                </div>
+              )}
 
               <p className="mt-6 text-center text-sm text-slate-600 dark:text-slate-400">
                 Don't have an account?{" "}
