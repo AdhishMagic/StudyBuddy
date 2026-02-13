@@ -15,7 +15,7 @@ class Settings(BaseSettings):
 
     # Stored as a string so EnvSettingsSource doesn't try to JSON-decode it.
     # Use comma-separated origins.
-    cors_origins: str = "http://localhost:5173,http://localhost:8080,http://127.0.0.1:5173,http://127.0.0.1:8080"
+    cors_origins: str = "http://localhost:5173,http://localhost:8080,http://localhost:8081,http://127.0.0.1:5173,http://127.0.0.1:8080,http://127.0.0.1:8081"
 
     # Google Identity / OAuth
     google_client_id: str | None = None
